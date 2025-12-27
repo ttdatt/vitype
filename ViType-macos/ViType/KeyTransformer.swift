@@ -12,6 +12,11 @@ struct KeyTransformAction: Equatable {
     let text: String
 }
 
+enum OutputEncoding: Int32 {
+    case unicode = 0
+    case compositeUnicode = 1
+}
+
 final class KeyTransformer {
     private var engine: OpaquePointer?
 
@@ -23,10 +28,19 @@ final class KeyTransformer {
         }
     }
 
+    var outputEncoding: OutputEncoding = .unicode {
+        didSet {
+            if let engine {
+                vitype_engine_set_output_encoding(engine, outputEncoding.rawValue)
+            }
+        }
+    }
+
     init() {
         engine = vitype_engine_new()
         if let engine {
             vitype_engine_set_auto_fix_tone(engine, autoFixTone)
+            vitype_engine_set_output_encoding(engine, outputEncoding.rawValue)
         }
     }
 

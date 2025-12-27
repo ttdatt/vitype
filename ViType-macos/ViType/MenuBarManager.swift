@@ -127,32 +127,8 @@ final class MenuBarManager: NSObject {
     }
 
     @objc private func openSettings() {
-        // Ensure the app is a regular app (not just accessory/background)
-        NSApp.setActivationPolicy(.regular)
-
-        // First, try to find and show an existing window
-        var foundWindow = false
-        for window in NSApp.windows {
-            // Skip status item windows and panels
-            if window is NSPanel { continue }
-            if window.className.contains("StatusBar") { continue }
-            if window.level == .statusBar { continue }
-
-            // This looks like our app window
-            if window.contentView != nil {
-                window.makeKeyAndOrderFront(nil)
-                foundWindow = true
-                break
-            }
-        }
-
-        // If no window found or all were closed, post notification to open one
-        if !foundWindow {
-            NotificationCenter.default.post(name: .showSettingsWindow, object: nil)
-        }
-
-        // Activate the app to bring it to front
-        NSApp.activate(ignoringOtherApps: true)
+        // Post notification - AppDelegate handles all the window management
+        NotificationCenter.default.post(name: .showSettingsWindow, object: nil)
     }
 
     @objc private func showAbout() {

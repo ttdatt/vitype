@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @AppStorage("autoFixTone") private var autoFixTone = true
+    @AppStorage("outputEncoding") private var outputEncoding = 0
     @AppStorage(AppExclusion.isEnabledKey) private var appExclusionEnabled = true
     @AppStorage(AppExclusion.excludedBundleIDsKey) private var excludedBundleIDsText = ""
     @AppStorage(AppExclusion.viTypeEnabledKey) private var viTypeEnabled = true
@@ -109,6 +110,19 @@ struct ContentView: View {
             Toggle("Auto Fix Tone", isOn: $autoFixTone)
             
             Text("Automatically reposition tone marks when adding vowels to follow Vietnamese spelling rules.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Divider()
+
+            Picker("Character Encoding:", selection: $outputEncoding) {
+                Text("Unicode").tag(0)
+                Text("Composite Unicode").tag(1)
+            }
+            .pickerStyle(.menu)
+
+            Text("Unicode uses precomposed characters (default). Composite Unicode uses decomposed characters (NFD).")
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

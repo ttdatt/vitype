@@ -19,6 +19,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var userDefaultsObserver: NSObjectProtocol?
 
     private var menuBarManager: MenuBarManager?
+    private var settingsWindowObserver: NSObjectProtocol?
 
     // Cached shortcut settings for performance
     private var shortcutKey: String = ""
@@ -26,9 +27,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var shortcutModifiers: CGEventFlags = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Start as accessory app (menu bar only, no Dock icon)
+        NSApp.setActivationPolicy(.accessory)
         // Register default values
         UserDefaults.standard.register(defaults: [
             "autoFixTone": true,
+            "outputEncoding": 0,
             AppExclusion.isEnabledKey: true,
             AppExclusion.excludedBundleIDsKey: "",
             AppExclusion.viTypeEnabledKey: true,
@@ -48,6 +52,60 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Initialize menu bar
         menuBarManager = MenuBarManager()
+        
+        // Listen for settings window requests
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showSettingsWindow),
+            name: .showSettingsWindow,
+            object: nil
+        )
+    }
+    
+    @objc private func showSettingsWindow() {
+        // Show app in Dock temporarily while settings window is open
+        NSApp.setActivationPolicy(.regular)
+        
+        // Use WindowManager to open the settings window via SwiftUI
+        Task { @MainActor in
+            WindowManager.shared.openSettings()
+            
+            // Wait a moment for the window to be created, then observe it
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+            
+            // Find and observe the settings window for close events
+            for window in NSApp.windows {
+                if window is NSPanel { continue }
+                if window.className.contains("StatusBar") { continue }
+                if window.level == .statusBar { continue }
+                
+                if window.contentView != nil && window.isVisible {
+                    self.observeWindowClose(window)
+                    break
+                }
+            }
+        }
+        
+        // Activate the app to bring it to front
+        NSApp.activate(ignoringOtherApps: true)
+    }
+    
+    private func observeWindowClose(_ window: NSWindow) {
+        // Remove any existing observer
+        if let observer = settingsWindowObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        
+        // Observe when this window closes
+        settingsWindowObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.willCloseNotification,
+            object: window,
+            queue: .main
+        ) { [weak self] _ in
+            // Hide from Dock when settings window closes
+            NSApp.setActivationPolicy(.accessory)
+            self?.settingsWindowObserver = nil
+        }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -62,6 +120,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let userDefaultsObserver {
             NotificationCenter.default.removeObserver(userDefaultsObserver)
         }
+        if let settingsWindowObserver {
+            NotificationCenter.default.removeObserver(settingsWindowObserver)
+        }
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func startKeyTap() {
@@ -253,8 +315,10 @@ extension AppDelegate {
 
         guard let s = event.keyboardGetUnicodeString() else { return false }
 
-        // Update autoFixTone setting from UserDefaults
+        // Update settings from UserDefaults
         transformer.autoFixTone = UserDefaults.standard.bool(forKey: "autoFixTone")
+        let encodingValue = UserDefaults.standard.integer(forKey: "outputEncoding")
+        transformer.outputEncoding = OutputEncoding(rawValue: Int32(encodingValue)) ?? .unicode
         
         if let action = transformer.process(input: s) {
             let extraDeleteCount = shouldWipeGhostSuggestion() ? 1 : 0

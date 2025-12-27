@@ -14,22 +14,10 @@ struct ViTypeApp: App {
     
     var body: some Scene {
         WindowGroup(id: "settings") {
-            SettingsWindowContent()
+            ContentView()
+                .injectWindowManager()
         }
         .windowResizability(.contentSize)
         .defaultPosition(.center)
-    }
-}
-
-/// Wrapper view that handles the openWindow action for showing settings
-struct SettingsWindowContent: View {
-    @Environment(\.openWindow) private var openWindow
-
-    var body: some View {
-        ContentView()
-            .onReceive(NotificationCenter.default.publisher(for: .showSettingsWindow)) { _ in
-                // Re-open/focus the settings window
-                openWindow(id: "settings")
-            }
     }
 }
