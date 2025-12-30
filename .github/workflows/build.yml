@@ -64,8 +64,15 @@ jobs:
 
       - name: Create DMG
         run: |
+          STAGING_DIR="$(mktemp -d)"
+          cleanup() { rm -rf "${STAGING_DIR}" || true; }
+          trap cleanup EXIT
+
+          ditto "ViType.app" "${STAGING_DIR}/ViType.app"
+          ln -s "/Applications" "${STAGING_DIR}/Applications"
+
           hdiutil create -volname "ViType" \
-            -srcfolder ViType.app \
+            -srcfolder "${STAGING_DIR}" \
             -ov -format UDZO \
             ViType.dmg
 

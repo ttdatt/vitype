@@ -120,6 +120,27 @@ final class MenuBarManager: NSObject {
 
         menu.addItem(NSMenuItem.separator())
 
+        let startAtLoginItem = NSMenuItem(
+            title: "Start at Login",
+            action: #selector(toggleStartAtLogin),
+            keyEquivalent: ""
+        )
+        startAtLoginItem.target = self
+        startAtLoginItem.state = LaunchAtLoginManager.isOnForToggle ? .on : .off
+        menu.addItem(startAtLoginItem)
+
+        if LaunchAtLoginManager.state == .requiresApproval {
+            let approvalHintItem = NSMenuItem(
+                title: "Approval required in System Settings…",
+                action: nil,
+                keyEquivalent: ""
+            )
+            approvalHintItem.isEnabled = false
+            menu.addItem(approvalHintItem)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+
         let settingsItem = NSMenuItem(
             title: "Settings...",
             action: #selector(openSettings),
@@ -170,6 +191,18 @@ final class MenuBarManager: NSObject {
     @objc private func openSettings() {
         // Post notification - AppDelegate handles all the window management
         NotificationCenter.default.post(name: .showSettingsWindow, object: nil)
+    }
+
+    @objc private func toggleStartAtLogin() {
+        do {
+            try LaunchAtLoginManager.setOn(!LaunchAtLoginManager.isOnForToggle)
+        } catch {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Unable to change “Start at Login”"
+            alert.informativeText = "\(error.localizedDescription)\n\nTip: Move ViType.app to /Applications, then try again."
+            alert.runModal()
+        }
     }
 
     @objc private func showAbout() {
