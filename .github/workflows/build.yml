@@ -1,8 +1,9 @@
 name: Build ViType
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - '[0-9]*'
   workflow_dispatch:
 
 jobs:
@@ -16,6 +17,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: false
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Setup SSH for private submodule
         env:
@@ -64,8 +67,15 @@ jobs:
 
       - name: Create DMG
         run: |
+          STAGING_DIR="$(mktemp -d)"
+          cleanup() { rm -rf "${STAGING_DIR}" || true; }
+          trap cleanup EXIT
+
+          ditto "ViType.app" "${STAGING_DIR}/ViType.app"
+          ln -s "/Applications" "${STAGING_DIR}/Applications"
+
           hdiutil create -volname "ViType" \
-            -srcfolder ViType.app \
+            -srcfolder "${STAGING_DIR}" \
             -ov -format UDZO \
             ViType.dmg
 

@@ -14,15 +14,20 @@ extension Notification.Name {
 final class MenuBarManager: NSObject {
     private var statusItem: NSStatusItem?
     private var userDefaultsObserver: NSObjectProtocol?
+    private var languageObserver: NSObjectProtocol?
 
     override init() {
         super.init()
         setupStatusItem()
         startObservingDefaults()
+        startObservingLanguageChanges()
     }
 
     deinit {
         if let observer = userDefaultsObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = languageObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
@@ -49,6 +54,16 @@ final class MenuBarManager: NSObject {
         }
     }
 
+    private func startObservingLanguageChanges() {
+        languageObserver = NotificationCenter.default.addObserver(
+            forName: .languageDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateStatusItemAppearance()
+        }
+    }
+
     private func updateStatusItemAppearance() {
         let isEnabled = UserDefaults.standard.bool(forKey: AppExclusion.viTypeEnabledKey)
         let inputMethodValue = UserDefaults.standard.integer(forKey: "inputMethod")
@@ -58,10 +73,10 @@ final class MenuBarManager: NSObject {
             // Use "V" for Vietnamese enabled, "E" for English (disabled)
             button.title = isEnabled ? "V" : "E"
 
-            // Optionally add a tooltip
+            // Localized tooltip
             button.toolTip = isEnabled
-                ? "ViType: Vietnamese (\(inputMethodLabel)) (Click to switch to English)"
-                : "ViType: English (Click to switch to Vietnamese)"
+                ? "ViType Tooltip Vietnamese".localized(inputMethodLabel)
+                : "ViType Tooltip English".localized()
         }
     }
 
@@ -87,7 +102,7 @@ final class MenuBarManager: NSObject {
         let inputMethodValue = UserDefaults.standard.integer(forKey: "inputMethod")
 
         let toggleItem = NSMenuItem(
-            title: isEnabled ? "Switch to English" : "Switch to Vietnamese",
+            title: isEnabled ? "Switch to English".localized() : "Switch to Vietnamese".localized(),
             action: #selector(menuToggleViType),
             keyEquivalent: ""
         )
@@ -96,7 +111,7 @@ final class MenuBarManager: NSObject {
 
         menu.addItem(NSMenuItem.separator())
 
-        let inputHeader = NSMenuItem(title: "Input Method", action: nil, keyEquivalent: "")
+        let inputHeader = NSMenuItem(title: "Input Method".localized(), action: nil, keyEquivalent: "")
         inputHeader.isEnabled = false
         menu.addItem(inputHeader)
 
@@ -120,8 +135,29 @@ final class MenuBarManager: NSObject {
 
         menu.addItem(NSMenuItem.separator())
 
+        let startAtLoginItem = NSMenuItem(
+            title: "Start at Login".localized(),
+            action: #selector(toggleStartAtLogin),
+            keyEquivalent: ""
+        )
+        startAtLoginItem.target = self
+        startAtLoginItem.state = LaunchAtLoginManager.isOnForToggle ? .on : .off
+        menu.addItem(startAtLoginItem)
+
+        if LaunchAtLoginManager.state == .requiresApproval {
+            let approvalHintItem = NSMenuItem(
+                title: "Approval required in System Settings…".localized(),
+                action: nil,
+                keyEquivalent: ""
+            )
+            approvalHintItem.isEnabled = false
+            menu.addItem(approvalHintItem)
+        }
+
+        menu.addItem(NSMenuItem.separator())
+
         let settingsItem = NSMenuItem(
-            title: "Settings...",
+            title: "Settings...".localized(),
             action: #selector(openSettings),
             keyEquivalent: ","
         )
@@ -131,7 +167,7 @@ final class MenuBarManager: NSObject {
         menu.addItem(NSMenuItem.separator())
 
         let aboutItem = NSMenuItem(
-            title: "About ViType",
+            title: "About ViType".localized(),
             action: #selector(showAbout),
             keyEquivalent: ""
         )
@@ -139,7 +175,7 @@ final class MenuBarManager: NSObject {
         menu.addItem(aboutItem)
 
         let quitItem = NSMenuItem(
-            title: "Quit ViType",
+            title: "Quit ViType".localized(),
             action: #selector(quitApp),
             keyEquivalent: "q"
         )
@@ -172,11 +208,23 @@ final class MenuBarManager: NSObject {
         NotificationCenter.default.post(name: .showSettingsWindow, object: nil)
     }
 
+    @objc private func toggleStartAtLogin() {
+        do {
+            try LaunchAtLoginManager.setOn(!LaunchAtLoginManager.isOnForToggle)
+        } catch {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Unable to change Start at Login".localized()
+            alert.informativeText = "\(error.localizedDescription)\n\n" + "Unable to change Start at Login Tip".localized()
+            alert.runModal()
+        }
+    }
+
     @objc private func showAbout() {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(options: [
             .credits: NSAttributedString(
-                string: "Author: Trần Tiến Đạt\nEmail: ttdat.nt@gmail.com",
+                string: "Author Credits".localized(),
                 attributes: [.font: NSFont.systemFont(ofSize: 11)]
             )
         ])

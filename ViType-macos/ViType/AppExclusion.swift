@@ -21,6 +21,9 @@ enum AppExclusion {
     static let shortcutControlKey = "shortcutControl"      // Control modifier
     static let shortcutShiftKey = "shortcutShift"          // Shift modifier
     static let useAXGhostSuggestionKey = "useAXGhostSuggestion"
+    
+    // Sound feedback settings
+    static let playSoundOnToggleKey = "playSoundOnToggle"
 
     static func normalizeBundleID(_ bundleID: String) -> String {
         bundleID.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()

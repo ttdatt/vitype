@@ -12,8 +12,10 @@ struct ViTypeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self)
     var appDelegate
     
+    @StateObject private var localizationManager = LocalizationManager.shared
+    
     var body: some Scene {
-        Window("ViType Settings", id: "settings") {
+        Window("ViType Settings".localized(), id: "settings") {
             ContentView()
                 .injectWindowManager()
         }

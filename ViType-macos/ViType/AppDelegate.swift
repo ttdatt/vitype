@@ -25,6 +25,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var shortcutKey: String = ""
     private var shortcutKeyCode: Int64 = -1
     private var shortcutModifiers: CGEventFlags = []
+    
+    // Sound feedback
+    private var toggleSound: NSSound?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Register default values
@@ -41,6 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             AppExclusion.shortcutControlKey: true,
             AppExclusion.shortcutShiftKey: false,
             AppExclusion.useAXGhostSuggestionKey: true,
+            AppExclusion.playSoundOnToggleKey: true,
         ])
 
         refreshTransformerSettings()
@@ -262,8 +266,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func toggleViType() {
         let currentState = UserDefaults.standard.bool(forKey: AppExclusion.viTypeEnabledKey)
-        UserDefaults.standard.set(!currentState, forKey: AppExclusion.viTypeEnabledKey)
+        let newState = !currentState
+        UserDefaults.standard.set(newState, forKey: AppExclusion.viTypeEnabledKey)
         transformer.reset()
+        
+        // Play sound feedback if enabled
+        if UserDefaults.standard.bool(forKey: AppExclusion.playSoundOnToggleKey) {
+            // Stop any currently playing sound to ensure new sound plays immediately
+            toggleSound?.stop()
+            // Different sounds for enable vs disable
+            // "Tink" for enable (short, high), "Pop" for disable (short, low)
+            let soundName = newState ? "Tink" : "Pop"
+            toggleSound = NSSound(named: NSSound.Name(soundName))
+            toggleSound?.play()
+        }
     }
 }
 
