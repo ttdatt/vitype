@@ -43,9 +43,9 @@ final class LocalizationManager: ObservableObject {
     private(set) var bundle: Bundle = .main
     
     private init() {
-        // Load saved language or default to English
-        let savedLanguage = UserDefaults.standard.string(forKey: Self.languageKey) ?? "en"
-        self.currentLanguage = AppLanguage(rawValue: savedLanguage) ?? .english
+        // Load saved language or default to Vietnamese
+        let savedLanguage = UserDefaults.standard.string(forKey: Self.languageKey) ?? "vi"
+        self.currentLanguage = AppLanguage(rawValue: savedLanguage) ?? .vietnamese
         updateBundle()
     }
     
