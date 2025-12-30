@@ -97,6 +97,8 @@ jobs:
             -destination 'generic/platform=macOS' \
             CODE_SIGN_IDENTITY="Dat Tran" \
             CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM= \
             OTHER_CODE_SIGN_FLAGS="--keychain $KEYCHAIN_PATH" \
             archive
 
