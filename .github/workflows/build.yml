@@ -95,16 +95,35 @@ jobs:
             -configuration Release \
             -archivePath build/ViType.xcarchive \
             -destination 'generic/platform=macOS' \
-            CODE_SIGN_IDENTITY="Dat Tran" \
+            CODE_SIGN_IDENTITY="Developer ID Application: CI SOFTWARE SOLUTIONS COMPANY LIMITED (WRVJA39U7V)" \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM= \
+            DEVELOPMENT_TEAM=WRVJA39U7V \
             OTHER_CODE_SIGN_FLAGS="--keychain $KEYCHAIN_PATH" \
             archive
 
       - name: Export app from archive
         run: |
           cp -R ViType-macos/build/ViType.xcarchive/Products/Applications/ViType.app ./ViType.app
+
+      - name: Notarize app
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          # Create ZIP for notarization
+          ditto -c -k --keepParent "ViType.app" "ViType.zip"
+          
+          # Submit for notarization
+          xcrun notarytool submit "ViType.zip" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_ID_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --wait
+          
+          # Staple the notarization ticket
+          xcrun stapler staple "ViType.app"
 
       - name: Create DMG
         run: |
