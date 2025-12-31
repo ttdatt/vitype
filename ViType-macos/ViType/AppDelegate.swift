@@ -94,6 +94,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // Show app in Dock temporarily while settings window is open
             NSApp.setActivationPolicy(.regular)
             NSApp.activate(ignoringOtherApps: true)
+            NSApp.unhide(nil)
 
             let settingsWindow = await WindowManager.shared.openSettings()
             self.observeWindowClose(settingsWindow)

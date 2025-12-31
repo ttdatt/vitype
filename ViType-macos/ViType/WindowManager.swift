@@ -12,6 +12,8 @@ import SwiftUI
 /// This allows us to open SwiftUI windows from anywhere in the app.
 final class WindowManager {
     static let shared = WindowManager()
+
+    private static let settingsWindowIdentifier = NSUserInterfaceItemIdentifier("vitype.settings")
     
     private var openWindowAction: OpenWindowAction?
     private weak var settingsWindow: NSWindow?
@@ -63,7 +65,13 @@ final class WindowManager {
             if window is NSPanel { return false }
             if window.className.contains("StatusBar") { return false }
             if window.level == .statusBar { return false }
-            return true
+            // Avoid grabbing transient windows such as status-item menus.
+            if !window.styleMask.contains(.titled) { return false }
+
+            if window.identifier == Self.settingsWindowIdentifier { return true }
+            if window.title.localizedCaseInsensitiveContains("ViType") { return true }
+
+            return false
         }
 
         // Prefer visible windows, then those with "ViType" in the title.
@@ -75,6 +83,9 @@ final class WindowManager {
         }
 
         if let found = sorted.first {
+            if found.identifier == nil {
+                found.identifier = Self.settingsWindowIdentifier
+            }
             settingsWindow = found
             startObservingSettingsWindowClose(found)
             return found
@@ -101,6 +112,7 @@ final class WindowManager {
 
         let window = NSWindow(contentViewController: hostingController)
         window.title = "ViType Settings".localized()
+        window.identifier = Self.settingsWindowIdentifier
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.isReleasedWhenClosed = false
         window.setContentSize(NSSize(width: 440, height: 560))
