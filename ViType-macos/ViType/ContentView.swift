@@ -120,8 +120,8 @@ struct ShortcutKeyField: View {
             .onAppear {
                 displayText = key.lowercased() == "space" ? "Space".localized() : key.uppercased()
             }
-            .onChange(of: displayText) { _, newValue in
-                processInput(newValue)
+            .onChange(of: displayText) { oldValue, newValue in
+                processInput(oldValue: oldValue, input: newValue)
             }
             .onChange(of: localizationManager.currentLanguage) { _, _ in
                 // Update display when language changes
@@ -129,11 +129,15 @@ struct ShortcutKeyField: View {
             }
     }
 
-    private func processInput(_ input: String) {
+    private func spaceCount(in value: String) -> Int {
+        value.reduce(0) { $0 + ($1 == " " ? 1 : 0) }
+    }
+
+    private func processInput(oldValue: String, input: String) {
         let trimmed = input.trimmingCharacters(in: .whitespaces)
         let spaceLocalized = "Space".localized()
-        
-        // Get the current display value for comparison
+
+        // Get the current display value for reset/validation.
         let currentLocalizedDisplay = key.lowercased() == "space" ? spaceLocalized : key.uppercased()
 
         // Check for "space" typed out (in either language)
@@ -143,9 +147,9 @@ struct ShortcutKeyField: View {
             return
         }
 
-        // If user types a space character - only detect actual new space input
-        // Not when space is part of the existing localized string (e.g., "Dấu cách")
-        if input == " " || (input.hasSuffix(" ") && !currentLocalizedDisplay.hasSuffix(" ")) {
+        // If user types a space character.
+        // Use old/new comparison so we don't mis-detect spaces that are part of the localized label (e.g., "Dấu cách").
+        if input == " " || spaceCount(in: input) > spaceCount(in: oldValue) {
             key = "space"
             displayText = spaceLocalized
             return
