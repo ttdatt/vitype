@@ -43,7 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             AppExclusion.isEnabledKey: true,
             AppExclusion.excludedBundleIDsKey: "",
             AppExclusion.viTypeEnabledKey: true,
-            AppExclusion.shortcutKeyKey: "space",
+            AppExclusion.shortcutKeyKey: "x",
             AppExclusion.shortcutCommandKey: false,
             AppExclusion.shortcutOptionKey: false,
             AppExclusion.shortcutControlKey: true,
@@ -235,7 +235,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func refreshShortcutSettings() {
-        shortcutKey = UserDefaults.standard.string(forKey: AppExclusion.shortcutKeyKey) ?? "space"
+        shortcutKey = UserDefaults.standard.string(forKey: AppExclusion.shortcutKeyKey) ?? "x"
         shortcutKeyCode = Self.keyCodeForCharacter(shortcutKey)
 
         var modifiers: CGEventFlags = []

@@ -134,7 +134,7 @@ struct GeneralSettingsView: View {
 #Preview {
     GeneralSettingsView(
         viTypeEnabled: .constant(true),
-        shortcutKey: .constant("space"),
+        shortcutKey: .constant("x"),
         shortcutCommand: .constant(false),
         shortcutOption: .constant(false),
         shortcutControl: .constant(true),

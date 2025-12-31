@@ -37,7 +37,7 @@ struct ContentView: View {
     @AppStorage(AppExclusion.useAXGhostSuggestionKey) private var useAXGhostSuggestion = true
 
     // Shortcut settings
-    @AppStorage(AppExclusion.shortcutKeyKey) private var shortcutKey = "space"
+    @AppStorage(AppExclusion.shortcutKeyKey) private var shortcutKey = "x"
     @AppStorage(AppExclusion.shortcutCommandKey) private var shortcutCommand = false
     @AppStorage(AppExclusion.shortcutOptionKey) private var shortcutOption = false
     @AppStorage(AppExclusion.shortcutControlKey) private var shortcutControl = true
@@ -132,6 +132,9 @@ struct ShortcutKeyField: View {
     private func processInput(_ input: String) {
         let trimmed = input.trimmingCharacters(in: .whitespaces)
         let spaceLocalized = "Space".localized()
+        
+        // Get the current display value for comparison
+        let currentLocalizedDisplay = key.lowercased() == "space" ? spaceLocalized : key.uppercased()
 
         // Check for "space" typed out (in either language)
         if trimmed.lowercased() == "space" || trimmed == spaceLocalized {
@@ -140,8 +143,9 @@ struct ShortcutKeyField: View {
             return
         }
 
-        // If user types a space character
-        if input.contains(" ") {
+        // If user types a space character - only detect actual new space input
+        // Not when space is part of the existing localized string (e.g., "Dấu cách")
+        if input == " " || (input.hasSuffix(" ") && !currentLocalizedDisplay.hasSuffix(" ")) {
             key = "space"
             displayText = spaceLocalized
             return
@@ -150,7 +154,7 @@ struct ShortcutKeyField: View {
         // Take only the last character if multiple are entered
         guard let lastChar = trimmed.last else {
             // Empty input - reset to current key
-            displayText = key.lowercased() == "space" ? spaceLocalized : key.uppercased()
+            displayText = currentLocalizedDisplay
             return
         }
 
@@ -163,7 +167,7 @@ struct ShortcutKeyField: View {
             displayText = char.uppercased()
         } else {
             // Invalid character - reset to current key
-            displayText = key.lowercased() == "space" ? spaceLocalized : key.uppercased()
+            displayText = currentLocalizedDisplay
         }
     }
 }
