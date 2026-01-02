@@ -81,13 +81,7 @@ final class MenuBarManager: NSObject {
     }
 
     @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
-        let event = NSApp.currentEvent
-
-        if event?.type == .rightMouseUp {
-            showMenu()
-        } else {
-            toggleViType()
-        }
+        showMenu()
     }
 
     private func toggleViType() {

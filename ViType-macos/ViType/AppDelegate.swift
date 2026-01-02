@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import Carbon
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var keyTap: CFMachPort?
@@ -22,6 +23,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var excludedBundleIDs: Set<String> = []
     private var appActivationObserver: NSObjectProtocol?
     private var userDefaultsObserver: NSObjectProtocol?
+    private var inputSourceObserver: NSObjectProtocol?
+    private var cachedInputSourceID: String?
+    private var cachedInputSourceType: CFString?
+    
+    // Unsupported input sources that should bypass Vietnamese transformation
+    private let unsupportedInputSources: Set<String> = [
+        "com.apple.inputmethod.SCIM.ITABC",           // Pinyin - Simplified
+        "com.apple.inputmethod.TCIM.Pinyin",          // Pinyin - Traditional
+        "com.apple.inputmethod.Korean",               // Korean
+        "com.apple.inputmethod.Japanese",             // Japanese
+        "com.apple.inputmethod.TCIM.Cangjie",         // Cangjie
+        "com.apple.inputmethod.TCIM.Shuangpin",       // Shuangpin
+        "com.apple.inputmethod.SCIM.Shuangpin",       // Shuangpin (Simplified)
+    ]
 
     private var menuBarManager: MenuBarManager?
     private var settingsWindowObserver: NSObjectProtocol?
@@ -60,6 +75,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         refreshExcludedBundleIDs()
         refreshShortcutSettings()
         startAppExclusionObservers()
+        startInputSourceObservers()
         startKeyTap()
 
         // Initialize menu bar
@@ -138,12 +154,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let userDefaultsObserver {
             NotificationCenter.default.removeObserver(userDefaultsObserver)
         }
+        if let inputSourceObserver {
+            DistributedNotificationCenter.default().removeObserver(inputSourceObserver)
+        }
         if let settingsWindowObserver {
             NotificationCenter.default.removeObserver(settingsWindowObserver)
         }
         NotificationCenter.default.removeObserver(self)
     }
-
     private func startKeyTap() {
         let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
 
@@ -203,6 +221,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    private func startInputSourceObservers() {
+        refreshCachedInputSourceInfo(resetTransformerIfNeeded: false)
+
+        inputSourceObserver = DistributedNotificationCenter.default().addObserver(
+            forName: Notification.Name(kTISNotifySelectedKeyboardInputSourceChanged as String),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.refreshCachedInputSourceInfo(resetTransformerIfNeeded: true)
+        }
+    }
+
+    private func refreshCachedInputSourceInfo(resetTransformerIfNeeded: Bool) {
+        let wasUnsupported = isInputSourceUnsupported(
+            inputSourceID: cachedInputSourceID,
+            inputSourceType: cachedInputSourceType
+        )
+
+        let info = getCurrentInputSourceInfo()
+        cachedInputSourceID = info?.id
+        cachedInputSourceType = info?.type
+
+        let isUnsupported = isInputSourceUnsupported(
+            inputSourceID: cachedInputSourceID,
+            inputSourceType: cachedInputSourceType
+        )
+
+        if resetTransformerIfNeeded && wasUnsupported != isUnsupported {
+            transformer.reset()
+        }
+    }
+
     private func refreshTransformerSettings() {
         transformer.autoFixTone = UserDefaults.standard.bool(forKey: "autoFixTone")
         let methodValue = UserDefaults.standard.integer(forKey: "inputMethod")
@@ -244,6 +294,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func shouldBypassVietnameseInput() -> Bool {
         // Check global enable toggle first
         guard UserDefaults.standard.bool(forKey: AppExclusion.viTypeEnabledKey) else { return true }
+        
+        // Check if current input source is unsupported (e.g., Pinyin, Korean, Japanese)
+        if isUnsupportedInputSource() {
+            return true
+        }
 
         // Then check app exclusion
         guard UserDefaults.standard.bool(forKey: AppExclusion.isEnabledKey) else { return false }
@@ -272,6 +327,45 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             toggleSound = NSSound(named: NSSound.Name(soundName))
             toggleSound?.play()
         }
+    }
+    
+    private func isUnsupportedInputSource() -> Bool {
+        if cachedInputSourceID == nil && cachedInputSourceType == nil {
+            let info = getCurrentInputSourceInfo()
+            return isInputSourceUnsupported(inputSourceID: info?.id, inputSourceType: info?.type)
+        }
+        return isInputSourceUnsupported(inputSourceID: cachedInputSourceID, inputSourceType: cachedInputSourceType)
+    }
+    
+    private func isInputSourceUnsupported(inputSourceID: String?, inputSourceType: CFString?) -> Bool {
+        if inputSourceType == kTISTypeKeyboardInputMethodWithoutModes ||
+            inputSourceType == kTISTypeKeyboardInputMethodModeEnabled ||
+            inputSourceType == kTISTypeKeyboardInputMode {
+            return true
+        }
+        guard let inputSourceID else { return false }
+        return unsupportedInputSources.contains(inputSourceID)
+    }
+
+    private struct InputSourceInfo {
+        let id: String
+        let type: CFString?
+    }
+
+    private func getCurrentInputSourceInfo() -> InputSourceInfo? {
+        guard let currentSource = TISCopyCurrentKeyboardInputSource()?.takeRetainedValue() else { return nil }
+
+        guard let sourceID = TISGetInputSourceProperty(currentSource, kTISPropertyInputSourceID) else {
+            return nil
+        }
+        let id = Unmanaged<CFString>.fromOpaque(sourceID).takeUnretainedValue() as String
+
+        var type: CFString?
+        if let sourceType = TISGetInputSourceProperty(currentSource, kTISPropertyInputSourceType) {
+            type = Unmanaged<CFString>.fromOpaque(sourceType).takeUnretainedValue()
+        }
+
+        return InputSourceInfo(id: id, type: type)
     }
 }
 
