@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.22</title>
+    <sparkle:version>12200</sparkle:version>
+    <sparkle:shortVersionString>1.22</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Fri, 09 Jan 2026 23:57:46 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.22/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="hdIVVfUztpofxKXNeAgjd5nnDH87+ue00hDNr+iZ+2KDc5jx00f9OS0d6SHMdSlyZVmmTh80npz+eGH9aATuBw=="
+      length="3560497"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.22</h2>
+      <p>Changes since 1.21:</p>
+<ul>
+<li><code>c533088</code> Fix uoi compound leading horn</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.21</title>
     <sparkle:version>12100</sparkle:version>
     <sparkle:shortVersionString>1.21</sparkle:shortVersionString>
