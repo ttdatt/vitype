@@ -9,6 +9,24 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.19</title>
+    <sparkle:version>11900</sparkle:version>
+    <sparkle:shortVersionString>1.19</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Fri, 09 Jan 2026 06:31:13 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.19/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="nILkfaKKhWi42PGR4wxha7XWqyp3/vf7ZAGKA4V22seoWX55brnjnfrczeE7qX/zGcy59E3R+bmlfHUpBVyyBQ=="
+      length="3559813"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.19</h2>
+      <p>See release notes on GitHub for details.</p>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.18</title>
     <sparkle:version>11800</sparkle:version>
     <sparkle:shortVersionString>1.18</sparkle:shortVersionString>
