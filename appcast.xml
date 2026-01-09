@@ -7,6 +7,24 @@
     <language>en</language>
     
     <!-- Add new releases here (newest first) -->
+
+    <item>
+    <title>Version 1.18</title>
+    <sparkle:version>11800</sparkle:version>
+    <sparkle:shortVersionString>1.18</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Fri, 09 Jan 2026 06:23:58 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.18/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="rQJd83Si8VaqUozzVGvrQDuxMN38vckba9WmseHnPSmwOqUp8nnlmamOJmblS02T0XK6Qy+7zR6UACYXaXirAw=="
+      length="3559803"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.18</h2>
+      <p>See release notes on GitHub for details.</p>
+    ]]></description>
+  </item>
     
   </channel>
 </rss>
