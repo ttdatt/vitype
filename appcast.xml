@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.23</title>
+    <sparkle:version>12300</sparkle:version>
+    <sparkle:shortVersionString>1.23</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 10 Jan 2026 01:09:23 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.23/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="/uuKg1noQFjfsmIkWYpj27j4MBypyQrICL2cAXnz8Of2E0eFJI9O4Lqp9NXDyfG8dCzYd0eD5BYKZ9FWuFZ4Cg=="
+      length="3558532"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.23</h2>
+      <p>Changes since 1.22:</p>
+<ul>
+<li><code>55083ad</code> Unify Telex and VNI transforms</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.22</title>
     <sparkle:version>12200</sparkle:version>
     <sparkle:shortVersionString>1.22</sparkle:shortVersionString>
