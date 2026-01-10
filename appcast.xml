@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.26</title>
+    <sparkle:version>12600</sparkle:version>
+    <sparkle:shortVersionString>1.26</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 10 Jan 2026 05:53:47 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.26/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="aaRmXIpP4ee8MR3+1+ILCMZurUGr01GbJFIqkX5eAEALGl56aDMub877M8HUjocoi/1ng4bCcZI9MI15bEuZDA=="
+      length="3559627"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.26</h2>
+      <p>Changes since 1.25:</p>
+<ul>
+<li><code>0fb55fa</code> Fix uo compounds with horned u</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.25</title>
     <sparkle:version>12500</sparkle:version>
     <sparkle:shortVersionString>1.25</sparkle:shortVersionString>
