@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.28</title>
+    <sparkle:version>12800</sparkle:version>
+    <sparkle:shortVersionString>1.28</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 10 Jan 2026 06:54:24 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.28/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="As4Ce6A/e/gGo7yLZiHqlod8EmGjxh1zRJ0gPylMWFdJ4F2baH9oRIlC3CPsPyVxofJQrxN+bpLYe7Rj3WZyAw=="
+      length="3563377"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.28</h2>
+      <p>Changes since 1.27:</p>
+<ul>
+<li><code>0af71f7</code> Add App Exclusion menu item to menubar</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.27</title>
     <sparkle:version>12700</sparkle:version>
     <sparkle:shortVersionString>1.27</sparkle:shortVersionString>
