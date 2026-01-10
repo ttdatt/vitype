@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.27</title>
+    <sparkle:version>12700</sparkle:version>
+    <sparkle:shortVersionString>1.27</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 10 Jan 2026 06:28:30 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.27/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="J5Ifw/9PyX+HLvsCh8XuUZA5y0HdHNtELsmupK4pKG3n+P7KG8FjYhii0vC83GEMyn1Hz+xdp0Q0lq9Ul3E2Cw=="
+      length="3560805"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.27</h2>
+      <p>Changes since 1.26:</p>
+<ul>
+<li><code>83d38e4</code> Fix uou compound tone placement</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.26</title>
     <sparkle:version>12600</sparkle:version>
     <sparkle:shortVersionString>1.26</sparkle:shortVersionString>
