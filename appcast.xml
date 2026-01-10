@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.24</title>
+    <sparkle:version>12400</sparkle:version>
+    <sparkle:shortVersionString>1.24</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 10 Jan 2026 03:28:47 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.24/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="qpnjLDWUdxyPtc+A+JfLacxzRYqUoyLtNPkKIi+ylnqywIrNrKUkFGQGZjSe9dLRWxkdK4D6/bgDx9QckOa4CA=="
+      length="3559907"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.24</h2>
+      <p>Changes since 1.23:</p>
+<ul>
+<li><code>496c387</code> Fix backspace raw buffer sync</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.23</title>
     <sparkle:version>12300</sparkle:version>
     <sparkle:shortVersionString>1.23</sparkle:shortVersionString>
