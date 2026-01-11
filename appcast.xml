@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.29</title>
+    <sparkle:version>12900</sparkle:version>
+    <sparkle:shortVersionString>1.29</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sun, 11 Jan 2026 03:49:06 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.29/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="Pp5QWEm3B4hGd33Ksf4Bl2a3+4J8cX4khVzws8ti5GZCwLIi68mn70tDNEgJBroRjbXYI6BopOKKWmoZfU2fAg=="
+      length="3565086"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.29</h2>
+      <p>Changes since 1.28:</p>
+<ul>
+<li><code>be8ba42</code> Handle pre-toned uo compounds</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.28</title>
     <sparkle:version>12800</sparkle:version>
     <sparkle:shortVersionString>1.28</sparkle:shortVersionString>
