@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.31</title>
+    <sparkle:version>13100</sparkle:version>
+    <sparkle:shortVersionString>1.31</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Thu, 15 Jan 2026 06:21:34 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.31/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="EIFLdeWFALoCi2ZpRDkpT9ykj0eCRF8YQfsAot8GebsbMTPBuouub2TxLjbAUwU1P2hs8UaI04AEJUPRjEulCA=="
+      length="3566297"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.31</h2>
+      <p>Changes since 1.30:</p>
+<ul>
+<li><code>e8aa9f9</code> Add Free Tone Placement checkbox to settings</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.30</title>
     <sparkle:version>13000</sparkle:version>
     <sparkle:shortVersionString>1.30</sparkle:shortVersionString>
