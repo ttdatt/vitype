@@ -9,6 +9,28 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.32</title>
+    <sparkle:version>13200</sparkle:version>
+    <sparkle:shortVersionString>1.32</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Thu, 15 Jan 2026 12:57:47 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.32/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="Q5DKKFjJbAVuU+deNUWw5kc2lD1swKm4WXziIciEuKfDCe0tWvPJz1WWV3V+HUrrqvVoI4DS5AkURgHTKCmtCA=="
+      length="3566538"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.32</h2>
+      <p>Changes since 1.31:</p>
+<ul>
+<li><code>178d078</code> Fix CGEvent tap recovery after screen lock/sleep</li>
+<li><code>f4ee48c</code> Remove host prefix</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.31</title>
     <sparkle:version>13100</sparkle:version>
     <sparkle:shortVersionString>1.31</sparkle:shortVersionString>
