@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.33</title>
+    <sparkle:version>13300</sparkle:version>
+    <sparkle:shortVersionString>1.33</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 17 Jan 2026 02:22:30 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.33/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="KliCJIwzYxOO8TSoWqb0dmo5J3jGKTipNrUhVpw3SC0/xofmSaWsQQPj1po1jVdnHQR7FhLjeUsUkn+lkgx2DQ=="
+      length="3566391"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.33</h2>
+      <p>Changes since 1.32:</p>
+<ul>
+<li><code>a80e9d7</code> Increase free transform D stroke max gap to 4 characters</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.32</title>
     <sparkle:version>13200</sparkle:version>
     <sparkle:shortVersionString>1.32</sparkle:shortVersionString>
