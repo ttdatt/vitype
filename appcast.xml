@@ -9,6 +9,28 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.36</title>
+    <sparkle:version>13600</sparkle:version>
+    <sparkle:shortVersionString>1.36</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Wed, 21 Jan 2026 10:53:18 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.36/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="C2HiSOHkZaepiHfs/LFFmTU3mL0PE4xLbXLuVrSOIVDja+SbdBhnl5y7t6+e6+fg4WigvCM2mYjBzoXRG1FPCA=="
+      length="3563576"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.36</h2>
+      <p>Changes since 1.35:</p>
+<ul>
+<li><code>1b81c11</code> Enhance foreign mode for invalid final consonants</li>
+<li><code>b7633ad</code> Support backtick as toggle shortcut key</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.35</title>
     <sparkle:version>13500</sparkle:version>
     <sparkle:shortVersionString>1.35</sparkle:shortVersionString>
