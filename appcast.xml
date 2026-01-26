@@ -9,6 +9,61 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.37</title>
+    <sparkle:version>13700</sparkle:version>
+    <sparkle:shortVersionString>1.37</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Mon, 26 Jan 2026 13:30:40 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.37/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="N7z4AIZnPvYsmSR6g6cxsKbYd5TplWf2ZDnP7oPpMvneQIcfPiQJeVkM7PKko8SeAw20xpGSbVWjTxkmM/0PDg=="
+      length="3559153"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.37</h2>
+      <p>Changes since 1.36:</p>
+<ul>
+<li><code>8282930</code> Reset input state on app switch</li>
+<li><code>20ed1ca</code> chmod +x build_dmg.sh</li>
+<li><code>5098939</code> Add 'ViType-core/' from commit '9d5b8b965242d320fac846214e1cde784584b108'</li>
+<li><code>a4280ea</code> Remove ViType-core submodule</li>
+<li><code>9d5b8b9</code> Enhance foreign mode for invalid final consonants</li>
+<li><code>0bac327</code> Increase free transform D stroke max gap to 4 characters</li>
+<li><code>dcde593</code> Added a free_tone_placement config that bypasses cluster validation when enabled</li>
+<li><code>37188b2</code> Vowel cluster validation</li>
+<li><code>ef7607f</code> Handle pre-toned uo compounds</li>
+<li><code>e69befc</code> Update doc</li>
+<li><code>6285513</code> Fix uou compound tone placement</li>
+<li><code>83ee090</code> Fix uo compounds with horned u</li>
+<li><code>64cd0bc</code> Fix dd transform to avoid mid-word conversions</li>
+<li><code>05d09d7</code> Fix backspace raw buffer sync</li>
+<li><code>39ec803</code> Unify Telex and VNI transforms</li>
+<li><code>4e8c483</code> Unify input method</li>
+<li><code>cc4d374</code> Fix uoi compound leading horn</li>
+<li><code>d580e4d</code> Add tests for uoi compound</li>
+<li><code>0ef2059</code> Fix uoi horn transforms</li>
+<li><code>501ac18</code> Allow circumflex override after w transform</li>
+<li><code>86ee189</code> Lock transforms after escape until boundary</li>
+<li><code>64b8e20</code> Refactor IME engine and split C FFI</li>
+<li><code>afe9035</code> Map tests from Telex to VNI</li>
+<li><code>4a689e5</code> Fix ưo consonant auto-fix</li>
+<li><code>88d5523</code> Support modern tone placement</li>
+<li><code>f03d795</code> Update agent files</li>
+<li><code>e55983b</code> Fix: skip redundant rewrite when entering foreign mode</li>
+<li><code>2102212</code> Update agent files</li>
+<li><code>550f6eb</code> Keep 3-word history across boundaries</li>
+<li><code>cf97998</code> Add license</li>
+<li><code>fbaacc7</code> Support VNI</li>
+<li><code>de2df9f</code> Support Composite Unicode</li>
+<li><code>cb399eb</code> Generalize two-vowel tone placement with final consonant</li>
+<li><code>2cdd749</code> u as slide</li>
+<li><code>29a4eee</code> Initial commit</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.36</title>
     <sparkle:version>13600</sparkle:version>
     <sparkle:shortVersionString>1.36</sparkle:shortVersionString>
