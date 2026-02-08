@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.38</title>
+    <sparkle:version>13800</sparkle:version>
+    <sparkle:shortVersionString>1.38</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sun, 08 Feb 2026 01:10:16 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.38/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="WYxNKNShX0lMdEPxfmQFgv6HWnD152Slb5h09IriOrDTcGGHgmSbSv4QwvuB/vJjzWGHDTw+DdBTAg5/HB1nDQ=="
+      length="3561826"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.38</h2>
+      <p>Changes since 1.37:</p>
+<ul>
+<li><code>95e999e</code> Clear history on Enter boundary</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.37</title>
     <sparkle:version>13700</sparkle:version>
     <sparkle:shortVersionString>1.37</sparkle:shortVersionString>
