@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.39</title>
+    <sparkle:version>13900</sparkle:version>
+    <sparkle:shortVersionString>1.39</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sun, 08 Feb 2026 06:38:17 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.39/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="IzYxtPkwpM0R2UReBgy4CQLOY9/AOFRDI/d/3i40+wgdkj0hD9VzeUekr+t8EG8rrscuV1l8nl556sKs9ljRBw=="
+      length="3559272"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.39</h2>
+      <p>Changes since 1.38:</p>
+<ul>
+<li><code>a22cb29</code> Remove "Current App" from App Exclusion, show Previous App on separate line</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.38</title>
     <sparkle:version>13800</sparkle:version>
     <sparkle:shortVersionString>1.38</sparkle:shortVersionString>
