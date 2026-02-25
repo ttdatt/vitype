@@ -537,6 +537,15 @@ When **Auto Fix Tone** is enabled (default: on), the tone mark is automatically 
 | `hòa` + `i` | hoài | hoài | 3 vowels → tone moves to middle (a) |
 | `hòa` + `n` | hoàn | hoàn | 2 vowels + consonant → tone moves to 2nd (a) |
 
+Auto Fix Tone also includes a structural fix for invalid `ơ` clusters: when a standalone `ơ` (from `o7`, not preceded by `ư`) is followed by a vowel other than `i`, the horn is removed (`ơ` → `o`) before continuing normal tone placement.
+
+| Input Sequence | Result | Explanation |
+|----------------|--------|-------------|
+| `ho7a` | hoa | standalone `ơ` before `a` is normalized to `o` |
+| `ho7a85c` | hoặc | prevents invalid `hơă...` sequence |
+| `ho7i` | hơi | `ơi` is valid, so horn is kept |
+| `hu7o7u` | hươu | `ươ` cluster is preserved (`ơ` is preceded by `ư`) |
+
 ---
 
 ## 5. Escape Sequences (Double-Key Undo)
@@ -745,7 +754,7 @@ The `VitypeEngine::process` method for VNI follows this order:
 4. **Consonant transform** → Check for `d9` → `đ`
 5. **Vowel transform** → Check for `6`/`7`/`8` keys
 6. **Tone mark** → Check for `1`/`2`/`3`/`4`/`5`/`0` keys
-7. **Auto Fix Tone** → Reposition tone if a vowel was added (when enabled)
+7. **Auto Fix Tone** → Reposition tone / normalize vowel structure if needed (when enabled)
 8. **Invalid syllable check** → Revert to raw text and enter foreign mode if needed
 
 Notes:

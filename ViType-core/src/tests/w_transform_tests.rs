@@ -606,6 +606,32 @@ mod compound_uow_transform_tests {
         assert_eq!(apply_input("mwjon"), "mượn");
     }
 
+    // MARK: - Standalone ơ + Vowel Auto-Fix
+
+    #[test]
+    fn testStandaloneOhornBeforeVowelRemovesHorn() {
+        // "howa" -> "hoa" (standalone ơ before vowel auto-fixes back to o)
+        assert_eq!(apply_input("howa"), "hoa");
+    }
+
+    #[test]
+    fn testStandaloneOhornBeforeVowelWithBreveAndTone() {
+        // Regression: "howawjc" should become "hoặc", not "hơặc".
+        assert_eq!(apply_input("howawjc"), "hoặc");
+    }
+
+    #[test]
+    fn testStandaloneOhornKeepsOiCluster() {
+        // "ơi" is valid and must keep horn on o.
+        assert_eq!(apply_input("howi"), "hơi");
+    }
+
+    #[test]
+    fn testStandaloneOhornDoesNotBreakUowCompound() {
+        // ươ-cluster remains intact because ơ is preceded by ư.
+        assert_eq!(apply_input("huwouw"), "hươu");
+    }
+
     #[test]
     fn testQUClusterNoCompound() {
         // "qu" is a consonant cluster, so uow compound shouldn't turn it into "qươ"
