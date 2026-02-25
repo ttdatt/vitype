@@ -9,6 +9,29 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.41</title>
+    <sparkle:version>14100</sparkle:version>
+    <sparkle:shortVersionString>1.41</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Wed, 25 Feb 2026 03:26:28 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.41/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="Zq3V3RwxvKNW5xU7KhJ/oduhPdhqN4kqIQgYlobAlfAJ+Vvu/o7VH8aayRZm4wpUEWgzBVp8qYsZzc8hxVk0Ag=="
+      length="3575002"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.41</h2>
+      <p>Changes since 1.40:</p>
+<ul>
+<li><code>5cb721e</code> Merge pull request #7 from meichengg/feat/shortcut-recorder</li>
+<li><code>eaf63d3</code> Merge branch 'main' into feat/shortcut-recorder</li>
+<li><code>2ba5129</code> feat: shortcut recorder UI + modifier-only shortcut support</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.40</title>
     <sparkle:version>14000</sparkle:version>
     <sparkle:shortVersionString>1.40</sparkle:shortVersionString>
