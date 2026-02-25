@@ -34,6 +34,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var flushQueuedEventsScheduled: Bool = false
     private var lastFocusedElement: AXUIElement?
 
+    // Modifier-only shortcut tracking
+    private var modifierShortcutArmed = false
+    private var keyPressedDuringModifiers = false
+
     private var frontmostBundleID: String?
     private var excludedBundleIDs: Set<String> = []
     private var appActivationObserver: NSObjectProtocol?
@@ -196,6 +200,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     private func startKeyTap() {
         let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
+                     | CGEventMask(1 << CGEventType.flagsChanged.rawValue)
 
         keyTap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
@@ -209,6 +214,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
                     delegate.handleTapDisabled()
                     return nil
+                }
+                if type == .flagsChanged {
+                    let suppress = delegate.handleFlagsChangedEvent(event: event)
+                    return suppress ? nil : Unmanaged.passUnretained(event)
                 }
                 let suppress = delegate.handle(event: event)
                 return suppress ? nil : Unmanaged.passUnretained(event)
@@ -506,16 +515,43 @@ extension AppDelegate {
     }
 
     private func isToggleShortcut(keyCode: Int64, flags: CGEventFlags) -> Bool {
-        // Must have at least one modifier configured
         guard shortcutModifiers.rawValue != 0 else { return false }
-        // Must have the correct key
+        // Modifier-only shortcut — handled in handleFlagsChangedEvent instead
+        if shortcutKey.isEmpty { return false }
         guard keyCode == shortcutKeyCode else { return false }
 
-        // Check modifiers - we need to mask out caps lock and numeric pad flags
         let relevantModifiers: CGEventFlags = [.maskCommand, .maskAlternate, .maskControl, .maskShift]
         let pressedModifiers = flags.intersection(relevantModifiers)
-
         return pressedModifiers == shortcutModifiers
+    }
+
+    /// Handles flagsChanged events for modifier-only shortcuts (e.g. Ctrl+Shift).
+    /// Toggles on release if no key was pressed while the exact modifiers were held.
+    func handleFlagsChangedEvent(event: CGEvent) -> Bool {
+        // Pass through during recording
+        if AppExclusion.isRecordingShortcut { return false }
+        // Only for modifier-only shortcuts (shortcutKey is empty)
+        guard shortcutKey.isEmpty, shortcutModifiers.rawValue != 0 else { return false }
+
+        let relevantModifiers: CGEventFlags = [.maskCommand, .maskAlternate, .maskControl, .maskShift]
+        let currentModifiers = event.flags.intersection(relevantModifiers)
+
+        if currentModifiers == shortcutModifiers {
+            // Exact match — arm the toggle
+            modifierShortcutArmed = true
+            keyPressedDuringModifiers = false
+        } else if currentModifiers.isEmpty && modifierShortcutArmed {
+            // All modifiers released — toggle if no key was pressed while held
+            if !keyPressedDuringModifiers {
+                toggleViType()
+            }
+            modifierShortcutArmed = false
+            keyPressedDuringModifiers = false
+        }
+        // If modifiers partially released (not empty, not matching), stay armed —
+        // user is releasing keys one at a time, wait until all are released.
+
+        return false
     }
     
     /// Returns `true` if the event should be suppressed (not passed to the application).
@@ -536,8 +572,11 @@ extension AppDelegate {
         let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
         let flags = event.flags
 
-        // Check for toggle shortcut
-        if isToggleShortcut(keyCode: keyCode, flags: flags) {
+        // Track key press for modifier-only shortcut detection
+        if modifierShortcutArmed { keyPressedDuringModifiers = true }
+
+        // Check for toggle shortcut (skip during shortcut recording)
+        if !AppExclusion.isRecordingShortcut && isToggleShortcut(keyCode: keyCode, flags: flags) {
             toggleViType()
             return true  // Suppress the event
         }

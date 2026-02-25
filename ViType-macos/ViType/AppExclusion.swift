@@ -24,6 +24,9 @@ enum AppExclusion {
     // Sound feedback settings
     static let playSoundOnToggleKey = "playSoundOnToggle"
 
+    // Set to true while the shortcut recorder is active so the CGEvent tap passes events through
+    static var isRecordingShortcut = false
+
     static func normalizeBundleID(_ bundleID: String) -> String {
         bundleID.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }

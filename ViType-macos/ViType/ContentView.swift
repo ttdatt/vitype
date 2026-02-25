@@ -47,18 +47,15 @@ struct ContentView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Header - always visible
             VStack(alignment: .leading, spacing: 4) {
                 Text("ViType")
                     .font(.title)
                     .fontWeight(.bold)
-
                 Text("Vietnamese Input Method".localized())
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
 
-            // Segmented control for tabs
             Picker("", selection: $selectedTab) {
                 ForEach(SettingsTab.allCases, id: \.self) { tab in
                     Text(tab.localizedName()).tag(tab)
@@ -69,111 +66,43 @@ struct ContentView: View {
 
             Divider()
 
-            // Tab content
-            Group {
-                switch selectedTab {
-                case .general:
-                    GeneralSettingsView(
-                        viTypeEnabled: $viTypeEnabled,
-                        shortcutKey: $shortcutKey,
-                        shortcutCommand: $shortcutCommand,
-                        shortcutOption: $shortcutOption,
-                        shortcutControl: $shortcutControl,
-                        shortcutShift: $shortcutShift,
-                        inputMethod: $inputMethod,
-                        tonePlacement: $tonePlacement,
-                        autoFixTone: $autoFixTone,
-                        freeTonePlacement: $freeTonePlacement,
-                        outputEncoding: $outputEncoding,
-                        playSoundOnToggle: $playSoundOnToggle
-                    )
+            ScrollView {
+                Group {
+                    switch selectedTab {
+                    case .general:
+                        GeneralSettingsView(
+                            viTypeEnabled: $viTypeEnabled,
+                            shortcutKey: $shortcutKey,
+                            shortcutCommand: $shortcutCommand,
+                            shortcutOption: $shortcutOption,
+                            shortcutControl: $shortcutControl,
+                            shortcutShift: $shortcutShift,
+                            inputMethod: $inputMethod,
+                            tonePlacement: $tonePlacement,
+                            autoFixTone: $autoFixTone,
+                            freeTonePlacement: $freeTonePlacement,
+                            outputEncoding: $outputEncoding,
+                            playSoundOnToggle: $playSoundOnToggle
+                        )
 
-                case .appExclusion:
-                    AppExclusionView(
-                        appExclusionEnabled: $appExclusionEnabled,
-                        excludedBundleIDsText: $excludedBundleIDsText,
-                        frontmostAppMonitor: frontmostAppMonitor
-                    )
+                    case .appExclusion:
+                        AppExclusionView(
+                            appExclusionEnabled: $appExclusionEnabled,
+                            excludedBundleIDsText: $excludedBundleIDsText,
+                            frontmostAppMonitor: frontmostAppMonitor
+                        )
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding()
         .frame(width: 420)
-        .id(localizationManager.currentLanguage) // Force refresh when language changes
         .onChange(of: windowManager.requestedTab) { _, newTab in
             if let tab = newTab {
                 selectedTab = tab
                 windowManager.requestedTab = nil
             }
-        }
-    }
-}
-
-// Custom text field that only accepts a single character (a-z, 0-9, []\;',./) or "space"
-struct ShortcutKeyField: View {
-    @Binding var key: String
-    @State private var displayText: String = ""
-    @StateObject private var localizationManager = LocalizationManager.shared
-    private static let allowedShortcutCharacters: Set<Character> = Set("abcdefghijklmnopqrstuvwxyz0123456789[]\\;',./`")
-
-    var body: some View {
-        TextField("", text: $displayText)
-            .textFieldStyle(.roundedBorder)
-            .onAppear {
-                displayText = key.lowercased() == "space" ? "Space".localized() : key.uppercased()
-            }
-            .onChange(of: displayText) { oldValue, newValue in
-                processInput(oldValue: oldValue, input: newValue)
-            }
-            .onChange(of: localizationManager.currentLanguage) { _, _ in
-                // Update display when language changes
-                displayText = key.lowercased() == "space" ? "Space".localized() : key.uppercased()
-            }
-    }
-
-    private func spaceCount(in value: String) -> Int {
-        value.reduce(0) { $0 + ($1 == " " ? 1 : 0) }
-    }
-
-    private func processInput(oldValue: String, input: String) {
-        let trimmed = input.trimmingCharacters(in: .whitespaces)
-        let spaceLocalized = "Space".localized()
-
-        // Get the current display value for reset/validation.
-        let currentLocalizedDisplay = key.lowercased() == "space" ? spaceLocalized : key.uppercased()
-
-        // Check for "space" typed out (in either language)
-        if trimmed.lowercased() == "space" || trimmed == spaceLocalized {
-            key = "space"
-            displayText = spaceLocalized
-            return
-        }
-
-        // If user types a space character.
-        // Use old/new comparison so we don't mis-detect spaces that are part of the localized label (e.g., "Dấu cách").
-        if input == " " || spaceCount(in: input) > spaceCount(in: oldValue) {
-            key = "space"
-            displayText = spaceLocalized
-            return
-        }
-
-        // Take only the last character if multiple are entered
-        guard let lastChar = trimmed.last else {
-            // Empty input - reset to current key
-            displayText = currentLocalizedDisplay
-            return
-        }
-
-        let char = String(lastChar).lowercased()
-
-        // Only accept allowed shortcut characters
-        if let c = char.first, char.count == 1, Self.allowedShortcutCharacters.contains(c) {
-            key = char
-            displayText = char.uppercased()
-        } else {
-            // Invalid character - reset to current key
-            displayText = currentLocalizedDisplay
         }
     }
 }

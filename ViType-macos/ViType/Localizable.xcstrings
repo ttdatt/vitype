@@ -4,6 +4,54 @@
     "" : {
 
     },
+    "Shortcut Cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hủy"
+          }
+        }
+      }
+    },
+    "Shortcut Record" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record Shortcut"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi phím tắt"
+          }
+        }
+      }
+    },
+    "Shortcut Record Help" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press a key combination and hold for 1 second to save. Supports modifier-only shortcuts (e.g. Ctrl+Shift)."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhấn tổ hợp phím và giữ 1 giây để lưu. Hỗ trợ phím tắt chỉ dùng modifier (ví dụ: Ctrl+Shift)."
+          }
+        }
+      }
+    },
     "About ViType" : {
       "extractionState" : "stale",
       "localizations" : {
