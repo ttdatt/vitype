@@ -25,7 +25,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var keyTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
     private var transformer = KeyTransformer()
-    private let injectedEventTag: Int64 = 0x11EE22DD
+    private let injectedEventTag: Int64 = kViTypeEventMarker
+    private let characterInjector = CharacterInjector()
     
     private var isInjectingReplacement: Bool = false
     private var pendingInjectedKeyDownCount: Int = 0
@@ -581,6 +582,20 @@ extension AppDelegate {
     }
 
     private func resetStateIfFocusedElementChanged() {
+        // Skip focus check for Electron-based apps (VSCode, Cursor, Trae) as their AX references are unstable
+        // and trigger constant state resets, breaking Vietnamese input (e.g. "đă3ng").
+        // We rely on app activation/deactivation to reset state for these apps.
+        if let bundleID = frontmostBundleID {
+             let lower = bundleID.lowercased()
+             if lower.contains("vscode") || 
+                lower.contains("cursor") || 
+                lower.contains("trae") ||
+                lower.contains("windsurf") ||
+                lower.contains("electron") {
+                 return
+             }
+        }
+
         guard AXIsProcessTrusted() else { return }
 
         let current: AXUIElement? = {
@@ -612,12 +627,19 @@ extension AppDelegate {
     }
 
     private func replace(last count: Int, with text: String, extraDeleteCount: Int) {
-        beginReplacementInjection(backspaceCount: extraDeleteCount + count)
-        if extraDeleteCount > 0 {
-            for _ in 0..<extraDeleteCount { sendKey(CGKeyCode(Self.backspaceKey)) }
+        beginReplacementInjection()
+        
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let self = self else { return }
+            self.characterInjector.injectSync(
+                backspaceCount: extraDeleteCount + count,
+                text: text,
+                proxy: nil
+            )
+            DispatchQueue.main.async {
+                self.finishReplacementInjection()
+            }
         }
-        for _ in 0..<count { sendKey(CGKeyCode(Self.backspaceKey)) }
-        sendText(text)
     }
     
     private func enqueueKeyDownEvent(_ event: CGEvent) {
@@ -633,25 +655,21 @@ extension AppDelegate {
         if queuedKeyDownEvents.count > 128 {
             queuedKeyDownEvents.removeAll(keepingCapacity: true)
             isInjectingReplacement = false
-            pendingInjectedKeyDownCount = 0
             transformer.reset()
         }
     }
     
-    private func beginReplacementInjection(backspaceCount: Int) {
+    private func beginReplacementInjection(backspaceCount: Int = 0) {
         isInjectingReplacement = true
-        pendingInjectedKeyDownCount = max(0, backspaceCount) + 1
+    }
+    
+    private func finishReplacementInjection() {
+        isInjectingReplacement = false
+        scheduleFlushQueuedEvents()
     }
     
     private func noteInjectedKeyDown() {
-        guard isInjectingReplacement else { return }
-        if pendingInjectedKeyDownCount > 0 {
-            pendingInjectedKeyDownCount -= 1
-        }
-        if pendingInjectedKeyDownCount == 0 {
-            isInjectingReplacement = false
-            scheduleFlushQueuedEvents()
-        }
+        // No-op: we manage state via completion handler now
     }
     
     private func scheduleFlushQueuedEvents() {
@@ -683,7 +701,8 @@ extension AppDelegate {
         if shouldBypassVietnameseInput() {
             transformer.reset()
             if let s = queued.unicodeString {
-                sendText(s)
+                // Use replace with 0 backspaces to handle text injection asynchronously and safely
+                replace(last: 0, with: s, extraDeleteCount: 0)
             } else {
                 sendKey(CGKeyCode(keyCode))
             }
@@ -720,7 +739,8 @@ extension AppDelegate {
             let extraDeleteCount = shouldWipeGhostSuggestion() ? 1 : 0
             replace(last: action.deleteCount, with: action.text, extraDeleteCount: extraDeleteCount)
         } else {
-            sendText(s)
+            // Use replace with 0 backspaces
+            replace(last: 0, with: s, extraDeleteCount: 0)
         }
     }
 

@@ -4,3 +4,4 @@
 //
 
 #include "vitype_core.h"
+#include <libproc.h>

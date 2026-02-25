@@ -193,6 +193,12 @@ impl VitypeEngine {
         }
 
         if self.auto_fix_tone {
+            if let Some(action) = self.try_auto_fix_standalone_ohorn_before_vowel(ch) {
+                return self.return_action_or_fallback(action, previous_buffer_count);
+            }
+        }
+
+        if self.auto_fix_tone {
             if let Some(action) = self.reposition_tone_if_needed(true, None) {
                 return self.return_action_or_fallback(action, previous_buffer_count);
             }
@@ -362,6 +368,71 @@ impl VitypeEngine {
 
         let delete_count = self.buffer.len().saturating_sub(o_index + 1);
         let output_text = self.buffer_string_from(o_index);
+        Some(KeyTransformAction {
+            delete_count,
+            text: output_text,
+        })
+    }
+
+    /// Auto-fix: remove horn from standalone ơ when followed by a vowel that
+    /// doesn't form a valid ơ-cluster. Valid clusters: ơi only.
+    /// Example: hơ + a → hoa (horn removed), hơ + i → hơi (kept).
+    fn try_auto_fix_standalone_ohorn_before_vowel(
+        &mut self,
+        ch: char,
+    ) -> Option<KeyTransformAction> {
+        // Only trigger when a vowel was just appended
+        if !is_vowel(ch) {
+            return None;
+        }
+
+        if self.buffer.len() < 2 {
+            return None;
+        }
+
+        let new_vowel_index = self.buffer.len() - 1;
+        let ohorn_index = new_vowel_index - 1;
+        let ohorn_char = self.buffer[ohorn_index];
+        let ohorn_base = self.get_base_vowel(ohorn_char);
+        let ohorn_base_lower = lower_char(ohorn_base);
+
+        // Must be ơ (with or without tone)
+        if ohorn_base_lower != 'ơ' {
+            return None;
+        }
+
+        // Check that ơ is NOT preceded by ư (which would make it ươ compound)
+        if ohorn_index > 0 {
+            let prev_char = self.buffer[ohorn_index - 1];
+            let prev_base = self.get_base_vowel(prev_char);
+            let prev_lower = lower_char(prev_base);
+            if prev_lower == 'ư' {
+                return None;
+            }
+        }
+
+        // ơi is a valid cluster — don't remove horn
+        let new_vowel_lower = lower_char(ch);
+        if new_vowel_lower == 'i' {
+            return None;
+        }
+
+        // Remove horn: ơ → o (preserving tone if any)
+        use crate::diacritics::{escape_shape_preserving_tone, VowelShape};
+        let plain_o = escape_shape_preserving_tone(ohorn_char, VowelShape::Horn)?;
+
+        self.buffer[ohorn_index] = plain_o;
+        self.clear_last_transform_state();
+
+        // Reposition tone if needed after structure change
+        if self.auto_fix_tone {
+            if let Some(action) = self.reposition_tone_if_needed(true, Some(ohorn_index)) {
+                return Some(action);
+            }
+        }
+
+        let delete_count = self.buffer.len().saturating_sub(ohorn_index + 1);
+        let output_text = self.buffer_string_from(ohorn_index);
         Some(KeyTransformAction {
             delete_count,
             text: output_text,
