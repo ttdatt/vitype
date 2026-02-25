@@ -143,9 +143,14 @@ class CharacterInjector {
             return (.fast, .chunked)
         }
         
-        // Terminals -> check for TUI apps first, fall back to slow
+        // Only actual terminal emulator apps should trigger TUI descendant scan.
+        // Editor hosts (e.g. VS Code integrated terminal) stay on .slow to avoid
+        // terminal-specific .extraSlow behavior in normal editor text fields.
+        let canScanForTUI = allTerminalBundleIDs.contains(bundleID)
+
+        // Terminal-like apps -> maybe TUI, otherwise slow
         if fastTerminals.contains(bundleID) || slowTerminals.contains(bundleID) {
-            if isTerminalRunningSlowTUI() {
+            if canScanForTUI && isTerminalRunningSlowTUI() {
                 return (.extraSlow, .oneByOne)
             }
             return (.slow, .oneByOne)

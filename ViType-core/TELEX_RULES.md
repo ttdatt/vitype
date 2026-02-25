@@ -675,7 +675,7 @@ When a new vowel or final consonant is added to a word that already has a tone m
 | `tuyetj` + `e` | tuỵet → tuyệt | tuyệt | e→ê creates nucleus-only vowel, tone moves to ê |
 
 **Detailed flow for "hoài":**
-```
+``` 
 h → o → a → f → i
         ↓   ↓   ↓
        hoa hòa hoài
@@ -684,7 +684,18 @@ h → o → a → f → i
             └─ tone applied to o (2 vowels → 1st)
 ```
 
-#### 4.7.3 When Tone Doesn't Move
+#### 4.7.3 Structural Vowel Auto-Fix (`ơ` + vowel)
+
+Auto Fix Tone also includes a structural fix for invalid `ơ` clusters: when a standalone `ơ` (not preceded by `ư`) is followed by a vowel other than `i`, the horn is removed (`ơ` → `o`) before continuing normal tone placement.
+
+| Input Sequence | Result | Explanation |
+|----------------|--------|-------------|
+| `howa` | hoa | standalone `ơ` before `a` is normalized to `o` |
+| `howawjc` | hoặc | prevents invalid `hơă...` sequence |
+| `howi` | hơi | `ơi` is valid, so horn is kept |
+| `huwouw` | hươu | `ươ` cluster is preserved (`ơ` is preceded by `ư`) |
+
+#### 4.7.4 When Tone Doesn't Move
 
 The tone stays in place when:
 - It's already in the correct position
@@ -697,7 +708,7 @@ The tone stays in place when:
 | `ta` + `s` | tá | tá | Single vowel |
 | `tá` + `i` | tái | tái | 2 vowels → 1st, tone already correct |
 
-#### 4.7.4 Disabling Auto Fix Tone
+#### 4.7.5 Disabling Auto Fix Tone
 
 Auto Fix Tone can be disabled in the app settings. When disabled:
 - Tone marks stay where they were originally placed
@@ -919,7 +930,8 @@ fn reposition_tone_if_needed(&mut self, suppressed_last_char: bool, min_start_of
 ### 8.1.2 Settings
 
 ```rust
-// Auto Fix Tone: automatically reposition tone marks when adding vowels
+// Auto Fix Tone: automatically reposition tone marks (and apply related
+// vowel-structure normalization) when adding vowels
 auto_fix_tone: bool // Default: true
 
 // Free Tone Placement: bypass valid cluster checks when applying tones
@@ -944,7 +956,7 @@ The `VitypeEngine::process` method follows this order:
 4. **Consonant transform** → Check for `dd` → `đ`
 5. **Vowel transform** → Check for `aa`/`aw`/etc.
 6. **Tone mark** → Find target vowel and apply tone
-7. **Auto Fix Tone** → Reposition tone if a vowel was added (when enabled)
+7. **Auto Fix Tone** → Reposition tone / normalize vowel structure if needed (when enabled)
 8. **Invalid syllable check** → Revert to raw text and enter foreign mode if needed
 
 Notes:
