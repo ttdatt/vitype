@@ -9,6 +9,29 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.40</title>
+    <sparkle:version>14000</sparkle:version>
+    <sparkle:shortVersionString>1.40</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Wed, 25 Feb 2026 02:47:28 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.40/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="w6DKzTf+FpPJrrrtuWURo8CKFHBpLRW4nVHtjvluEp0fPKWfH7+IcV2V82sEmv6oEYbvkWUlOnIagKncqDqdCg=="
+      length="3564935"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.40</h2>
+      <p>Changes since 1.39:</p>
+<ul>
+<li><code>9d7bd0a</code> Restrict TUI scanning to terminal emulators</li>
+<li><code>d5eb105</code> Merge pull request #5 from meichengg/main</li>
+<li><code>26a15ab</code> feat: TUI-aware injection + VNI standalone ơ auto-fix</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.39</title>
     <sparkle:version>13900</sparkle:version>
     <sparkle:shortVersionString>1.39</sparkle:shortVersionString>
