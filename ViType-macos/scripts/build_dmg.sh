@@ -308,15 +308,36 @@ DMG_BASENAME="${APP_NAME}-${VERSION}(${BUILD}).dmg"
 DMG_PATH="${OUT_DIR}/${DMG_BASENAME}"
 rm -f "${DMG_PATH}"
 
+# Create a temporary DMG in UDRW format (Read/Write) using HFS+ 
+# HFS+ mounts much faster than APFS for disk images
+TEMP_DMG="${OUT_DIR}/temp_${DMG_BASENAME}"
+rm -f "${TEMP_DMG}"
+
+echo "Creating temporary DMG..."
 hdiutil create \
   -volname "${VOLNAME}" \
   -srcfolder "${STAGING_DIR}" \
+  -fs "HFS+" \
+  -fsargs "-c c=64,a=16,e=16" \
+  -format UDRW \
+  -ov \
+  "${TEMP_DMG}"
+
+echo "Converting to compressed DMG..."
+hdiutil convert "${TEMP_DMG}" \
   -format UDZO \
   -imagekey zlib-level=9 \
-  -ov \
-  "${DMG_PATH}"
+  -o "${DMG_PATH}"
 
-echo "Created DMG: ${DMG_PATH}"
+rm -f "${TEMP_DMG}"
+
+# Code sign the DMG if signing is enabled (speeds up Gatekeeper verification on mount)
+if [ "${SIGN_APP}" = "1" ]; then
+  echo "Signing DMG..."
+  codesign --force --sign "${SIGNING_IDENTITY}" "${DMG_PATH}" || true
+fi
+
+echo "Created optimized DMG: ${DMG_PATH}"
 
 # Generate EdDSA signature for Sparkle updates
 echo ""
