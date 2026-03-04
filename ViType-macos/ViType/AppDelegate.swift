@@ -503,6 +503,7 @@ extension AppDelegate {
     private static let forwardDeleteKey: Int64 = 117
     private static let escapeKey: Int64 = 53
     private static let navigationKeys: Set<Int64> = [
+        48,                   // Tab (covers Tab/Shift+Tab focus traversal)
         123, 124, 125, 126,  // Arrow keys: left, right, down, up
         115, 119,            // Home, End
         116, 121             // Page Up, Page Down
