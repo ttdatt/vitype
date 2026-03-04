@@ -32,7 +32,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var pendingInjectedKeyDownCount: Int = 0
     private var queuedKeyDownEvents: [QueuedKeyDownEvent] = []
     private var flushQueuedEventsScheduled: Bool = false
-    private var lastFocusedElement: AXUIElement?
 
     // Modifier-only shortcut tracking
     private var modifierShortcutArmed = false
@@ -201,6 +200,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func startKeyTap() {
         let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
                      | CGEventMask(1 << CGEventType.flagsChanged.rawValue)
+                     | CGEventMask(1 << CGEventType.leftMouseDown.rawValue)
+                     | CGEventMask(1 << CGEventType.rightMouseDown.rawValue)
+                     | CGEventMask(1 << CGEventType.otherMouseDown.rawValue)
 
         keyTap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
@@ -214,6 +216,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
                     delegate.handleTapDisabled()
                     return nil
+                }
+                if type == .leftMouseDown || type == .rightMouseDown || type == .otherMouseDown {
+                    delegate.handleMouseDown()
+                    return Unmanaged.passUnretained(event)
                 }
                 if type == .flagsChanged {
                     let suppress = delegate.handleFlagsChangedEvent(event: event)
@@ -265,7 +271,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         pendingInjectedKeyDownCount = 0
         queuedKeyDownEvents.removeAll(keepingCapacity: true)
         flushQueuedEventsScheduled = false
-        lastFocusedElement = nil
         transformer.reset()
     }
 
@@ -281,6 +286,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func handleTapDisabled() {
         requestKeyTapRestart()
+    }
+
+    func handleMouseDown() {
+        resetInputState()
     }
 
     private func startSessionObservers() {
@@ -561,8 +570,6 @@ extension AppDelegate {
             noteInjectedKeyDown()
             return false
         }
-
-        resetStateIfFocusedElementChanged()
         
         if isInjectingReplacement {
             enqueueKeyDownEvent(event)
@@ -620,50 +627,6 @@ extension AppDelegate {
         return false
     }
 
-    private func resetStateIfFocusedElementChanged() {
-        // Skip focus check for Electron-based apps (VSCode, Cursor, Trae) as their AX references are unstable
-        // and trigger constant state resets, breaking Vietnamese input (e.g. "đă3ng").
-        // We rely on app activation/deactivation to reset state for these apps.
-        if let bundleID = frontmostBundleID {
-             let lower = bundleID.lowercased()
-             if lower.contains("vscode") || 
-                lower.contains("cursor") || 
-                lower.contains("trae") ||
-                lower.contains("windsurf") ||
-                lower.contains("electron") {
-                 return
-             }
-        }
-
-        guard AXIsProcessTrusted() else { return }
-
-        let current: AXUIElement? = {
-            if Thread.isMainThread {
-                return focusedElement()
-            }
-            return DispatchQueue.main.sync { [weak self] in
-                self?.focusedElement()
-            }
-        }()
-
-        guard let current else {
-            if lastFocusedElement != nil {
-                transformer.reset()
-            }
-            lastFocusedElement = nil
-            return
-        }
-
-        guard let lastFocusedElement else {
-            self.lastFocusedElement = current
-            return
-        }
-
-        guard !CFEqual(lastFocusedElement, current) else { return }
-
-        self.lastFocusedElement = current
-        resetInputState()
-    }
 
     private func replace(last count: Int, with text: String, extraDeleteCount: Int) {
         beginReplacementInjection()
@@ -885,6 +848,7 @@ extension AppDelegate {
         guard CFGetTypeID(value) == AXValueGetTypeID() else { return nil }
         return (value as! AXValue)
     }
+
 
 }
 
