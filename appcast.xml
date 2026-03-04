@@ -9,6 +9,29 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.42</title>
+    <sparkle:version>14200</sparkle:version>
+    <sparkle:shortVersionString>1.42</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Wed, 04 Mar 2026 05:33:51 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.42/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="hFSiTovAfWt5kWz8VATZkH6FtRNfGgJkMzlZYZoipl4lTzlnMA6TflPeS2uXWXYDmCxT7WBL0WfuJHAu855YCg=="
+      length="3574032"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.42</h2>
+      <p>Changes since 1.41:</p>
+<ul>
+<li><code>eb4c547</code> Reset transformer on Tab navigation</li>
+<li><code>76c02dd</code> Merge pull request #8 from meichengg/feat/shortcut-recorder</li>
+<li><code>2c6bfb1</code> fix(macos): Universal Event-Driven focus reset to solve VNI reset in Burp/Electron</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.41</title>
     <sparkle:version>14100</sparkle:version>
     <sparkle:shortVersionString>1.41</sparkle:shortVersionString>
