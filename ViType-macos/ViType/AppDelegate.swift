@@ -9,17 +9,55 @@ import Cocoa
 import Carbon
 import Sparkle
 
+private final class SparkleUserDriverDelegate: NSObject, SPUStandardUserDriverDelegate {
+    var beginForegroundPresentation: (() -> Void)?
+    var endForegroundPresentation: (() -> Void)?
+
+    func standardUserDriverWillHandleShowingUpdate(
+        _ handleShowingUpdate: Bool,
+        forUpdate update: SUAppcastItem,
+        state: SPUUserUpdateState
+    ) {
+        guard handleShowingUpdate else { return }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.beginForegroundPresentation?()
+        }
+    }
+
+    func standardUserDriverWillFinishUpdateSession() {
+        DispatchQueue.main.async { [weak self] in
+            self?.endForegroundPresentation?()
+        }
+    }
+}
+
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    private enum ForegroundPresentationReason: Hashable {
+        case settings
+        case updater
+    }
+
+    private let sparkleUserDriverDelegate: SparkleUserDriverDelegate
     // Sparkle updater controller for automatic updates
     let updaterController: SPUStandardUpdaterController
+    private var foregroundPresentationReasons: Set<ForegroundPresentationReason> = []
     
     override init() {
+        sparkleUserDriverDelegate = SparkleUserDriverDelegate()
         updaterController = SPUStandardUpdaterController(
             startingUpdater: true,
             updaterDelegate: nil,
-            userDriverDelegate: nil
+            userDriverDelegate: sparkleUserDriverDelegate
         )
         super.init()
+
+        sparkleUserDriverDelegate.beginForegroundPresentation = { [weak self] in
+            self?.beginForegroundPresentation(for: .updater)
+        }
+        sparkleUserDriverDelegate.endForegroundPresentation = { [weak self] in
+            self?.endForegroundPresentation(for: .updater)
+        }
     }
     
     private var keyTap: CFMachPort?
@@ -136,10 +174,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func openSettingsWindow(tab: SettingsTab? = nil) {
         Task { @MainActor in
-            // Show app in Dock temporarily while settings window is open
-            NSApp.setActivationPolicy(.regular)
-            NSApp.activate(ignoringOtherApps: true)
-            NSApp.unhide(nil)
+            beginForegroundPresentation(for: .settings)
 
             let settingsWindow = await WindowManager.shared.openSettings(tab: tab)
             self.observeWindowClose(settingsWindow)
@@ -158,10 +193,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: window,
             queue: .main
         ) { [weak self] _ in
-            // Hide from Dock when settings window closes
-            NSApp.setActivationPolicy(.accessory)
+            self?.endForegroundPresentation(for: .settings)
             self?.settingsWindowObserver = nil
         }
+    }
+
+    private func beginForegroundPresentation(for reason: ForegroundPresentationReason) {
+        let inserted = foregroundPresentationReasons.insert(reason).inserted
+        guard inserted || NSApp.activationPolicy() != .regular else {
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        NSApp.setActivationPolicy(.regular)
+        NSApp.unhide(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func endForegroundPresentation(for reason: ForegroundPresentationReason) {
+        foregroundPresentationReasons.remove(reason)
+
+        guard foregroundPresentationReasons.isEmpty else { return }
+        NSApp.setActivationPolicy(.accessory)
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
