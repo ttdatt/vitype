@@ -9,6 +9,27 @@
     <!-- Add new releases here (newest first) -->
 
     <item>
+    <title>Version 1.43</title>
+    <sparkle:version>14300</sparkle:version>
+    <sparkle:shortVersionString>1.43</sparkle:shortVersionString>
+    <sparkle:minimumSystemVersion>14.6</sparkle:minimumSystemVersion>
+    <pubDate>Sat, 14 Mar 2026 23:20:16 +0000</pubDate>
+    <enclosure
+      url="https://github.com/ttdatt/vitype/releases/download/1.43/ViType.dmg"
+      type="application/octet-stream"
+      sparkle:edSignature="cyjPKzTAAvDIGnsgq5oyCSEnSxHrEtqBDjEmFjKf39+QWbXleDMWIwnZ+3V5pPZHIaMs4lgu71uoo0Qkf2CcBw=="
+      length="3585497"
+    />
+    <description><![CDATA[
+      <h2>What's New in 1.43</h2>
+      <p>Changes since 1.42:</p>
+<ul>
+<li><code>577bc03</code> Fix updater dialog app activation</li>
+</ul>
+    ]]></description>
+  </item>
+
+    <item>
     <title>Version 1.42</title>
     <sparkle:version>14200</sparkle:version>
     <sparkle:shortVersionString>1.42</sparkle:shortVersionString>
