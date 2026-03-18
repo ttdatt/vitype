@@ -62,5 +62,13 @@
 
     <key>NSHumanReadableCopyright</key>
     <string></string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>tsInputMethodCharacterRepertoireKey</key>
+    <array>
+        <string>Latn</string>
+    </array>
+    <key>tsInputMethodIconFileKey</key>
+    <string>vitype-icon</string>
 </dict>
 </plist>
