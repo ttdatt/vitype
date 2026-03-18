@@ -54,7 +54,24 @@ jobs:
           trap "rm -rf '${STAGING_DIR}'" EXIT
 
           ditto "$APP_PATH" "${STAGING_DIR}/ViType.app"
-          ln -s "/Applications" "${STAGING_DIR}/Applications"
+
+          # IMK input methods install to ~/Library/Input Methods/
+          ln -s "$HOME/Library/Input Methods" "${STAGING_DIR}/Input Methods"
+
+          # Add a README for installation
+          cat > "${STAGING_DIR}/README.txt" << 'INSTALL_EOF'
+          ViType - Vietnamese Input Method (IMK)
+
+          Installation:
+          1. Drag ViType.app to "Input Methods" folder
+          2. Log out and log back in (or restart)
+          3. Open System Settings > Keyboard > Input Sources
+          4. Click "+" and search for "ViType" under Vietnamese
+          5. Select ViType and click "Add"
+          6. Switch to ViType using the input source menu bar icon
+
+          Right-click the input source icon for settings (Telex/VNI, etc.)
+          INSTALL_EOF
 
           hdiutil create -volname "ViType" \
             -srcfolder "${STAGING_DIR}" \

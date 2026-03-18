@@ -165,6 +165,20 @@ pub extern "C" fn vitype_engine_get_buffer_len(engine: *mut VitypeEngine) -> i32
 }
 
 #[no_mangle]
+pub extern "C" fn vitype_engine_get_composed_text(engine: *mut VitypeEngine) -> *mut c_char {
+    if engine.is_null() {
+        return ptr::null_mut();
+    }
+    unsafe {
+        let text = (*engine).get_composed_text();
+        let encoded = convert_to_output_encoding(text, (*engine).output_encoding());
+        CString::new(encoded)
+            .unwrap_or_else(|_| CString::new("").unwrap())
+            .into_raw()
+    }
+}
+
+#[no_mangle]
 pub extern "C" fn vitype_engine_free_string(text: *mut c_char) {
     if text.is_null() {
         return;

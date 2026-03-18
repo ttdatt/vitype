@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>ViType</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+
+    <!-- Input Method Kit configuration -->
+    <key>InputMethodConnectionName</key>
+    <string>ViType_Connection</string>
+    <key>InputMethodServerControllerClass</key>
+    <string>ViTypeInputController</string>
+
+    <!-- Run as background-only app -->
+    <key>LSBackgroundOnly</key>
+    <true/>
+
+    <!-- Input mode definitions -->
+    <key>tsInputModeListKey</key>
+    <dict>
+        <key>com.dat.ViType.telex</key>
+        <dict>
+            <key>TISInputSourceID</key>
+            <string>com.dat.ViType.telex</string>
+            <key>TISIntendedLanguage</key>
+            <string>vi</string>
+            <key>tsInputModeScriptKey</key>
+            <string>smUnicodeScript</string>
+            <key>tsInputModeMenuIconFileKey</key>
+            <string>vitype-icon</string>
+            <key>tsInputModeAlternateMenuIconFileKey</key>
+            <string>vitype-icon</string>
+            <key>tsInputModeDefaultStateKey</key>
+            <true/>
+            <key>tsInputModePrimaryInScriptKey</key>
+            <true/>
+            <key>tsInputModeCharacterRepertoireKey</key>
+            <array>
+                <string>Latn</string>
+            </array>
+        </dict>
+    </dict>
+
+    <key>ComponentInputModeDict</key>
+    <dict>
+        <key>tsInputModeListKey</key>
+        <array>
+            <string>com.dat.ViType.telex</string>
+        </array>
+    </dict>
+
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+</dict>
+</plist>

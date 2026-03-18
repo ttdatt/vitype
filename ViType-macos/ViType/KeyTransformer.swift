@@ -123,4 +123,12 @@ final class KeyTransformer {
         guard let engine else { return 0 }
         return Int(vitype_engine_get_buffer_len(engine))
     }
+
+    func getComposedText() -> String {
+        guard let engine else { return "" }
+        guard let ptr = vitype_engine_get_composed_text(engine) else { return "" }
+        let text = String(cString: ptr)
+        vitype_engine_free_string(ptr)
+        return text
+    }
 }

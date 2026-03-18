@@ -1636,6 +1636,10 @@ impl VitypeEngine {
         self.buffer.len()
     }
 
+    pub(crate) fn get_composed_text(&self) -> String {
+        self.buffer.iter().collect::<String>()
+    }
+
     fn commit_current_word_to_history_if_needed(&mut self) {
         if self.buffer.is_empty() {
             // If there's no visible output for the current word, there's nothing meaningful to restore later.
