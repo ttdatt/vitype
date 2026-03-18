@@ -32,37 +32,32 @@
     <true/>
 
     <!-- Input mode definitions -->
-    <key>tsInputModeListKey</key>
-    <dict>
-        <key>com.dat.ViType.telex</key>
-        <dict>
-            <key>TISInputSourceID</key>
-            <string>com.dat.ViType.telex</string>
-            <key>TISIntendedLanguage</key>
-            <string>vi</string>
-            <key>tsInputModeScriptKey</key>
-            <string>smUnicodeScript</string>
-            <key>tsInputModeMenuIconFileKey</key>
-            <string>vitype-icon</string>
-            <key>tsInputModeAlternateMenuIconFileKey</key>
-            <string>vitype-icon</string>
-            <key>tsInputModeDefaultStateKey</key>
-            <true/>
-            <key>tsInputModePrimaryInScriptKey</key>
-            <true/>
-            <key>tsInputModeCharacterRepertoireKey</key>
-            <array>
-                <string>Latn</string>
-            </array>
-        </dict>
-    </dict>
-
     <key>ComponentInputModeDict</key>
     <dict>
         <key>tsInputModeListKey</key>
-        <array>
-            <string>com.dat.ViType.telex</string>
-        </array>
+        <dict>
+            <key>com.dat.ViType.telex</key>
+            <dict>
+                <key>TISInputSourceID</key>
+                <string>com.dat.ViType.telex</string>
+                <key>TISIntendedLanguage</key>
+                <string>vi</string>
+                <key>tsInputModeScriptKey</key>
+                <string>smUnicodeScript</string>
+                <key>tsInputModeMenuIconFileKey</key>
+                <string>vitype-icon</string>
+                <key>tsInputModeAlternateMenuIconFileKey</key>
+                <string>vitype-icon</string>
+                <key>tsInputModeDefaultStateKey</key>
+                <true/>
+                <key>tsInputModePrimaryInScriptKey</key>
+                <true/>
+                <key>tsInputModeCharacterRepertoireKey</key>
+                <array>
+                    <string>Latn</string>
+                </array>
+            </dict>
+        </dict>
     </dict>
 
     <key>NSHumanReadableCopyright</key>
