@@ -41,9 +41,9 @@ jobs:
           xcodebuild -scheme ViType \
             -configuration Release \
             -derivedDataPath .derivedData \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
             build
 
       - name: Create DMG
@@ -64,11 +64,11 @@ jobs:
 
           Installation:
           1. Drag ViType.app to "Input Methods" folder
-          2. Log out and log back in (or restart)
-          3. Open System Settings > Keyboard > Input Sources
-          4. Click "+" and search for "ViType" under Vietnamese
-          5. Select ViType and click "Add"
-          6. Switch to ViType using the input source menu bar icon
+          2. Open Terminal and run: xattr -cr ~/Library/Input\ Methods/ViType.app
+          3. Also in Terminal run: killall SystemUIServer
+          4. Open System Settings > Keyboard > Input Sources
+          5. Click "+" and search for "ViType" under Vietnamese
+          6. Select ViType and click "Add"
 
           Right-click the input source icon for settings (Telex/VNI, etc.)
           INSTALL_EOF
