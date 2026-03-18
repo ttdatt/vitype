@@ -45,9 +45,9 @@
                 <key>tsInputModeScriptKey</key>
                 <string>smUnicodeScript</string>
                 <key>tsInputModeMenuIconFileKey</key>
-                <string>vitype-icon</string>
+                <string>AppIcon</string>
                 <key>tsInputModeAlternateMenuIconFileKey</key>
-                <string>vitype-icon</string>
+                <string>AppIcon</string>
                 <key>tsInputModeDefaultStateKey</key>
                 <true/>
                 <key>tsInputModePrimaryInScriptKey</key>
@@ -69,6 +69,6 @@
         <string>Latn</string>
     </array>
     <key>tsInputMethodIconFileKey</key>
-    <string>vitype-icon</string>
+    <string>AppIcon</string>
 </dict>
 </plist>
