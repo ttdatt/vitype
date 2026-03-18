@@ -36,10 +36,10 @@
     <dict>
         <key>tsInputModeListKey</key>
         <dict>
-            <key>com.dat.ViType.telex</key>
+            <key>com.dat.ViType</key>
             <dict>
                 <key>TISInputSourceID</key>
-                <string>com.dat.ViType.telex</string>
+                <string>com.dat.ViType</string>
                 <key>TISIntendedLanguage</key>
                 <string>vi</string>
                 <key>tsInputModeScriptKey</key>
