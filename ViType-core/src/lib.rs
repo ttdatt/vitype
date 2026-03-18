@@ -1632,6 +1632,10 @@ impl VitypeEngine {
         self.history.clear();
     }
 
+    pub(crate) fn buffer_len(&self) -> usize {
+        self.buffer.len()
+    }
+
     fn commit_current_word_to_history_if_needed(&mut self) {
         if self.buffer.is_empty() {
             // If there's no visible output for the current word, there's nothing meaningful to restore later.

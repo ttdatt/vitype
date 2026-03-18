@@ -1,0 +1,69 @@
+name: Build ViType (Dev - No Signing)
+
+on:
+  push:
+    branches:
+      - 'chore/**'
+      - 'fix/**'
+      - 'feat/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ViType-core
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+
+      - name: Build with xcodebuild
+        working-directory: ViType-macos
+        run: |
+          xcodebuild -scheme ViType \
+            -configuration Release \
+            -derivedDataPath .derivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="-" \
+            build
+
+      - name: Create DMG
+        run: |
+          APP_PATH="ViType-macos/.derivedData/Build/Products/Release/ViType.app"
+
+          STAGING_DIR="$(mktemp -d)"
+          trap "rm -rf '${STAGING_DIR}'" EXIT
+
+          ditto "$APP_PATH" "${STAGING_DIR}/ViType.app"
+          ln -s "/Applications" "${STAGING_DIR}/Applications"
+
+          hdiutil create -volname "ViType" \
+            -srcfolder "${STAGING_DIR}" \
+            -ov -format UDZO \
+            ViType.dmg
+
+      - name: Upload DMG as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ViType-dev
+          path: ViType.dmg
+          retention-days: 7

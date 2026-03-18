@@ -591,13 +591,34 @@ extension AppDelegate {
         let hasActionModifier = flags.contains(.maskCommand) ||
                                 flags.contains(.maskControl) ||
                                 flags.contains(.maskAlternate)
-        
+
         // Backspace without modifiers - remove one char from buffer
         if keyCode == Self.backspaceKey && !hasActionModifier {
             transformer.deleteLastCharacter()
             return false
         }
-        
+
+        // Ctrl+W (delete word) or Ctrl+Backspace — if the engine has a composed word,
+        // intercept and delete the composed characters ourselves, then reset.
+        // This fixes TUI apps where the terminal's native word-delete operates on raw
+        // bytes that don't match the composed Vietnamese text.
+        let isCtrlW = keyCode == 13 && flags.contains(.maskControl)
+                      && !flags.contains(.maskCommand) && !flags.contains(.maskAlternate)
+        let isCtrlBackspace = keyCode == Self.backspaceKey && flags.contains(.maskControl)
+                              && !flags.contains(.maskCommand) && !flags.contains(.maskAlternate)
+        if (isCtrlW || isCtrlBackspace) {
+            let wordLen = transformer.currentWordLength()
+            if wordLen > 0 {
+                // Delete the composed word by sending backspaces, then reset
+                replace(last: wordLen, with: "", extraDeleteCount: 0)
+                transformer.reset()
+                return true // suppress original Ctrl+W
+            }
+            // No composed word — pass through to native handling
+            transformer.reset()
+            return false
+        }
+
         // Navigation keys, forward delete, escape, or any key with action modifiers - reset buffer
         if keyCode == Self.forwardDeleteKey ||
            keyCode == Self.escapeKey ||
@@ -751,13 +772,30 @@ extension AppDelegate {
         let hasActionModifier = flags.contains(.maskCommand) ||
                                 flags.contains(.maskControl) ||
                                 flags.contains(.maskAlternate)
-        
+
         if keyCode == Self.backspaceKey && !hasActionModifier {
             transformer.deleteLastCharacter()
             sendKey(CGKeyCode(Self.backspaceKey))
             return
         }
-        
+
+        // Ctrl+W / Ctrl+Backspace in queued replay — same logic as handle(event:)
+        let isCtrlW = keyCode == 13 && flags.contains(.maskControl)
+                      && !flags.contains(.maskCommand) && !flags.contains(.maskAlternate)
+        let isCtrlBackspace = keyCode == Self.backspaceKey && flags.contains(.maskControl)
+                              && !flags.contains(.maskCommand) && !flags.contains(.maskAlternate)
+        if (isCtrlW || isCtrlBackspace) {
+            let wordLen = transformer.currentWordLength()
+            if wordLen > 0 {
+                replace(last: wordLen, with: "", extraDeleteCount: 0)
+                transformer.reset()
+                return
+            }
+            transformer.reset()
+            sendKey(CGKeyCode(keyCode))
+            return
+        }
+
         if keyCode == Self.forwardDeleteKey ||
            keyCode == Self.escapeKey ||
            Self.navigationKeys.contains(keyCode) ||

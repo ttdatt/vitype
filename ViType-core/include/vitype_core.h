@@ -26,6 +26,7 @@ void vitype_engine_set_input_method(VitypeEngine *engine, int32_t method);  // 0
 void vitype_engine_set_output_encoding(VitypeEngine *engine, int32_t encoding);
 void vitype_engine_set_tone_placement(VitypeEngine *engine, int32_t placement); // 0 = Orthographic, 1 = NucleusOnly
 VitypeTransformResult vitype_engine_process(VitypeEngine *engine, const char *input_utf8);
+int32_t vitype_engine_get_buffer_len(VitypeEngine *engine);
 void vitype_engine_free_string(char *text);
 
 #ifdef __cplusplus

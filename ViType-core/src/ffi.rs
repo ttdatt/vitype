@@ -157,6 +157,14 @@ pub extern "C" fn vitype_engine_process(
 }
 
 #[no_mangle]
+pub extern "C" fn vitype_engine_get_buffer_len(engine: *mut VitypeEngine) -> i32 {
+    if engine.is_null() {
+        return 0;
+    }
+    unsafe { (*engine).buffer_len() as i32 }
+}
+
+#[no_mangle]
 pub extern "C" fn vitype_engine_free_string(text: *mut c_char) {
     if text.is_null() {
         return;

@@ -118,4 +118,9 @@ final class KeyTransformer {
             vitype_engine_delete_last_character(engine)
         }
     }
+
+    func currentWordLength() -> Int {
+        guard let engine else { return 0 }
+        return Int(vitype_engine_get_buffer_len(engine))
+    }
 }
