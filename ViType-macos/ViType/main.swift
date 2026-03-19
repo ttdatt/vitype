@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import Carbon
 import InputMethodKit
 
 // Register default values early
@@ -16,6 +17,15 @@ UserDefaults.standard.register(defaults: [
     "outputEncoding": 0,
     "tonePlacement": 0,
 ])
+
+// Register this input source with macOS on first launch
+// This is required for macOS to discover the input method
+if let bundleURL = Bundle.main.bundleURL as CFURL? {
+    let status = TISRegisterInputSource(bundleURL)
+    if status != noErr {
+        NSLog("ViType: TISRegisterInputSource returned \(status)")
+    }
+}
 
 // Connection name must match InputMethodConnectionName in Info.plist
 let kConnectionName = "ViType_Connection"
