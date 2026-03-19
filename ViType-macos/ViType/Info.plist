@@ -27,43 +27,21 @@
     <key>InputMethodServerControllerClass</key>
     <string>ViTypeInputController</string>
 
-    <!-- Run as background-only app -->
+    <!-- Background-only app -->
     <key>LSBackgroundOnly</key>
+    <true/>
+    <key>LSUIElement</key>
     <true/>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 
-    <!-- TOP-LEVEL tsInputModeListKey (NOT nested in ComponentInputModeDict) -->
-    <key>tsInputModeListKey</key>
-    <dict>
-        <key>com.dat.ViType</key>
-        <dict>
-            <key>TISInputSourceID</key>
-            <string>com.dat.ViType</string>
-            <key>TISIntendedLanguage</key>
-            <string>vi</string>
-            <key>tsInputModeScriptKey</key>
-            <string>smUnicodeScript</string>
-            <key>tsInputModeMenuIconFileKey</key>
-            <string>AppIcon</string>
-            <key>tsInputModeAlternateMenuIconFileKey</key>
-            <string>AppIcon</string>
-            <key>tsInputModeDefaultStateKey</key>
-            <true/>
-            <key>tsInputModePrimaryInScriptKey</key>
-            <true/>
-            <key>tsInputModeIsVisibleKey</key>
-            <true/>
-            <key>tsInputModeCharacterRepertoireKey</key>
-            <array>
-                <string>Latn</string>
-            </array>
-        </dict>
-    </dict>
-
+    <!-- Vietnamese input method identification -->
+    <key>TISIntendedLanguage</key>
+    <string>vi</string>
     <key>tsInputMethodCharacterRepertoireKey</key>
     <array>
         <string>Latn</string>
+        <string>Vitn</string>
     </array>
     <key>tsInputMethodIconFileKey</key>
     <string>AppIcon</string>
